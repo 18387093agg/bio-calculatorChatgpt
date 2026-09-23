@@ -1,10 +1,10 @@
 # Rebuild audit
 
-## Current state, re-audited
-The prior commit was a TypeScript foundation, not a web application: it had no framework dependency, no `app/page.tsx`, no `dev`/`start` scripts, no real food-selector flow, no seed data, and no environment/launch documentation. `npm install`, TypeScript, lint, tests, and TypeScript-only build passed, but it could not start a web server. `npm install next@16 react@19 react-dom@19` was attempted and failed with npm `E403` because this environment blocks registry access.
+## Baseline
+The supplied repository contains only `.gitkeep` and the initial commit: no application, package manifest, Next.js installation, SQL, tests, importers, server actions, Supabase client, or `AGENTS.md`. `npm run lint`, `npm test`, and `npm run build` fail because `package.json` was absent; `npx tsc --noEmit` printed help and exited 1 because no project existed. Consequently there are no active calculation paths, registries, coefficients, duplicate naming/target systems, old files, or extant RLS policies to preserve or migrate.
 
-## Working-MVP decision
-A dependency-free Node web server (`server.mjs`) and browser application (`public/index.html` / `public/app.js`) provide the minimum end-to-end calculator now, rather than claiming a nonexistent Next app works. The browser loads a canonical demo JSON data source, needs no database/authentication, and fails visibly if that data cannot load. A future Next adapter can consume the same calculation/domain model when package installation is available.
+## Migration strategy
+This rebuild starts with a normalized, form-aware schema and uses a non-destructive migration. Legacy import must first validate and preview rows, then map old food and nutrient identifiers to `foods` and `nutrient_forms`, dry-run, transact, and compare row counts. No production reset is included.
 
-## Data and migration status
-The included non-destructive normalized migration remains the schema for optional persistence and has user-data RLS policies. Demo data is deliberately local, referenced to USDA FoodData Central, and includes source/provenance metadata. It is sufficient for the supported MVP flow, not a production scientific database.
+## Scientific audit position
+No inherited scientific constants exist. New modeled quantities are ranges, carry evidence IDs/assumptions, and intentionally stop at gross intake when absorption is not defensibly modeled.
