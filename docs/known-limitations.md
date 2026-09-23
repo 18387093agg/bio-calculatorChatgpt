@@ -1,0 +1,2 @@
+# Known limitations
+This is an estimation framework, not a metabolic simulation or diagnostic tool. The included migration is schema-only and does not manufacture a food seed database. Quantitative absorption is intentionally limited to the explicitly modeled examples until sourced records are imported. A Next.js package was not installed in the supplied empty repository, so this first-principles foundation ships as framework-agnostic TypeScript rather than pretending a nonexistent Next app was audited.

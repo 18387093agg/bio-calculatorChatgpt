@@ -1,0 +1,2 @@
+# Evidence ledger
+Evidence is stored in `evidence_sources` and referenced by form, retention, target, interaction, or supplement component. Model assumptions are labeled rather than represented as clinical facts. Initial implementation references National Academies DRIs, food preparation data, and explicitly bounded interaction models; production data seeding must add exact source metadata before exposing a coefficient.
