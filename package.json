@@ -1,0 +1,1 @@
+{"name":"bio-calculator","version":"1.0.0","private":true,"type":"module","scripts":{"lint":"tsc --noEmit","typecheck":"tsc --noEmit","test":"rm -rf .test-dist && tsc -p tsconfig.test.json && node --test .test-dist/tests/*.test.js","build":"tsc -p tsconfig.build.json"},"engines":{"node":">=22"}}

@@ -1,0 +1,2 @@
+# Product specification
+Bio Calculator is a bilingual nutrition and meal-analysis estimation tool. It supports multi-food meals, preparation/yield, gross and form-specific nutrients, source-segmented intake bars, target markers, evidence-on-demand, import validation, supplements, optional clinical context, biomarker context, logging, and reporting framed for clinician discussion. It must never represent modeled absorption or biomarkers as diagnosis or measured physiology.
