@@ -1,0 +1,233 @@
+{
+  "source": {
+    "name": "USDA FoodData Central",
+    "url": "https://fdc.nal.usda.gov/",
+    "note": "Development reference values per 100 g edible portion. Verify and expand before clinical or production use."
+  },
+  "foods": [
+    {
+      "id": "beef",
+      "name": "Beef, ground, cooked",
+      "category": "Meat",
+      "preparations": [
+        "Cooked",
+        "Raw"
+      ],
+      "nutrients": {
+        "energy": 250,
+        "protein": 26,
+        "fat": 15,
+        "carbohydrate": 0,
+        "iron_heme": 2.4,
+        "vitamin_b12_food": 2.5,
+        "zinc": 5.5
+      }
+    },
+    {
+      "id": "chicken",
+      "name": "Chicken breast, roasted",
+      "category": "Meat",
+      "preparations": [
+        "Cooked",
+        "Raw"
+      ],
+      "nutrients": {
+        "energy": 165,
+        "protein": 31,
+        "fat": 3.6,
+        "carbohydrate": 0,
+        "iron_heme": 0.7,
+        "vitamin_b12_food": 0.3,
+        "zinc": 1
+      }
+    },
+    {
+      "id": "egg",
+      "name": "Egg, whole, cooked",
+      "category": "Egg",
+      "preparations": [
+        "Cooked"
+      ],
+      "nutrients": {
+        "energy": 155,
+        "protein": 12.6,
+        "fat": 10.6,
+        "carbohydrate": 1.1,
+        "iron_nonheme": 1.2,
+        "vitamin_b12_food": 1.1,
+        "zinc": 1.3
+      }
+    },
+    {
+      "id": "milk",
+      "name": "Milk, 2%",
+      "category": "Dairy",
+      "preparations": [
+        "Ready to eat"
+      ],
+      "nutrients": {
+        "energy": 50,
+        "protein": 3.4,
+        "fat": 2,
+        "carbohydrate": 4.8,
+        "calcium": 120,
+        "vitamin_b12_food": 0.5
+      }
+    },
+    {
+      "id": "rice",
+      "name": "Rice, white, cooked",
+      "category": "Grain",
+      "preparations": [
+        "Cooked"
+      ],
+      "nutrients": {
+        "energy": 130,
+        "protein": 2.7,
+        "fat": 0.3,
+        "carbohydrate": 28.2,
+        "iron_nonheme": 0.2,
+        "thiamine": 0.02
+      }
+    },
+    {
+      "id": "potato",
+      "name": "Potato, boiled",
+      "category": "Vegetable",
+      "preparations": [
+        "Boiled",
+        "Raw"
+      ],
+      "nutrients": {
+        "energy": 87,
+        "protein": 1.9,
+        "fat": 0.1,
+        "carbohydrate": 20.1,
+        "iron_nonheme": 0.3,
+        "vitamin_c": 13,
+        "potassium": 379
+      }
+    },
+    {
+      "id": "spinach",
+      "name": "Spinach, cooked",
+      "category": "Vegetable",
+      "preparations": [
+        "Steamed",
+        "Raw"
+      ],
+      "nutrients": {
+        "energy": 23,
+        "protein": 3,
+        "fat": 0.3,
+        "carbohydrate": 3.8,
+        "iron_nonheme": 3.6,
+        "vitamin_c": 9.8,
+        "calcium": 136
+      }
+    },
+    {
+      "id": "lentils",
+      "name": "Lentils, cooked",
+      "category": "Legume",
+      "preparations": [
+        "Boiled",
+        "Raw"
+      ],
+      "nutrients": {
+        "energy": 116,
+        "protein": 9,
+        "fat": 0.4,
+        "carbohydrate": 20,
+        "iron_nonheme": 3.3,
+        "thiamine": 0.17,
+        "phytate": 250
+      }
+    },
+    {
+      "id": "orange",
+      "name": "Orange, raw",
+      "category": "Fruit",
+      "preparations": [
+        "Raw"
+      ],
+      "nutrients": {
+        "energy": 47,
+        "protein": 0.9,
+        "fat": 0.1,
+        "carbohydrate": 11.8,
+        "vitamin_c": 53.2,
+        "thiamine": 0.09
+      }
+    },
+    {
+      "id": "oats",
+      "name": "Oats, cooked",
+      "category": "High-phytate plant food",
+      "preparations": [
+        "Cooked",
+        "Raw"
+      ],
+      "nutrients": {
+        "energy": 71,
+        "protein": 2.5,
+        "fat": 1.5,
+        "carbohydrate": 12,
+        "iron_nonheme": 0.8,
+        "thiamine": 0.09,
+        "phytate": 150
+      }
+    }
+  ],
+  "targets": {
+    "iron": {
+      "rda": 8,
+      "ear": 6,
+      "ul": 45,
+      "unit": "mg",
+      "category": "Minerals",
+      "model": "ABSORPTION_MODELED",
+      "explanation": "Heme and non-heme contributions remain distinct. The displayed absorption range is a meal-level estimate, not a personal measurement."
+    },
+    "vitamin_b12": {
+      "rda": 2.4,
+      "unit": "\u00b5g",
+      "category": "Vitamins",
+      "model": "ABSORPTION_MODELED",
+      "explanation": "Food-bound B12 is represented separately from supplemental/free forms. Individual gastric and intrinsic-factor status are not inferred."
+    },
+    "calcium": {
+      "rda": 1000,
+      "ul": 2500,
+      "unit": "mg",
+      "category": "Minerals",
+      "model": "GROSS_ONLY",
+      "explanation": "Quantitative absorption is not modeled."
+    },
+    "thiamine": {
+      "rda": 1.2,
+      "optimalMin": 1.5,
+      "optimalMax": 1.7,
+      "unit": "mg",
+      "category": "Vitamins",
+      "model": "GROSS_ONLY",
+      "explanation": "Optimal range is a 2,500 kcal model assumption and does not replace the RDA."
+    },
+    "vitamin_c": {
+      "rda": 90,
+      "ul": 2000,
+      "unit": "mg",
+      "category": "Vitamins",
+      "model": "GROSS_ONLY",
+      "explanation": "Preparation retention is represented when a documented local demo rule exists."
+    },
+    "zinc": {
+      "rda": 11,
+      "ul": 40,
+      "unit": "mg",
+      "category": "Trace elements",
+      "model": "GROSS_ONLY",
+      "explanation": "Quantitative absorption is not modeled."
+    }
+  }
+}

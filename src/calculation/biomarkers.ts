@@ -1,0 +1,6 @@
+export interface BiomarkerInterpretation { status: 'below-lab-range' | 'within-lab-range' | 'above-lab-range' | 'uninterpretable'; confidence: 'low' | 'moderate'; possibleInterpretation: string; dietaryIntakeRelevant: boolean; clinicalFollowUpSuggested: boolean; }
+export function interpretBiomarker(value: number, labLow?: number, labHigh?: number, inflammationKnown = false): BiomarkerInterpretation {
+ if (!Number.isFinite(value) || labLow === undefined || labHigh === undefined) return { status: 'uninterpretable', confidence: 'low', possibleInterpretation: 'A supplied laboratory reference range is needed for contextual interpretation.', dietaryIntakeRelevant: false, clinicalFollowUpSuggested: false };
+ const status = value < labLow ? 'below-lab-range' : value > labHigh ? 'above-lab-range' : 'within-lab-range';
+ return { status, confidence: inflammationKnown ? 'low' : 'moderate', possibleInterpretation: inflammationKnown ? 'Inflammation can affect interpretation; dietary intake alone cannot establish cause.' : 'This is contextual information, not a diagnosis or a dietary requirement multiplier.', dietaryIntakeRelevant: true, clinicalFollowUpSuggested: status !== 'within-lab-range' };
+}

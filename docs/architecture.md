@@ -1,0 +1,2 @@
+# Architecture
+`src/domain` owns language-independent concepts and evidence identifiers. `src/calculation` contains pure staged calculations. `src/data` validates import records before persistence. `src/ui`/the web adapter may consume results but must not own nutrient data or physiology. SQL is the canonical source of nutrient, form, target, supplement, and evidence records; TypeScript holds interfaces and algorithms only.
