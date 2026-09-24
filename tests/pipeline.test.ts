@@ -1,0 +1,9 @@
+import test from 'node:test'; import assert from 'node:assert/strict';
+import { calculateNutrientPipeline, assertFiniteNonNegative } from '../src/calculation/pipeline/meal-pipeline.js';
+import { previewUsdaRows } from '../src/data/usda-importer.js';
+import type { Food } from '../src/domain/types.js';
+const lentils: Food={id:'lentils',name:'Lentils',category:'legume',nutrients:[{form:{id:'nonheme',nutrientKey:'iron',label:'Non-heme iron',origin:'plant'},amountPer100g:3,unit:'mg'},{form:{id:'thiamine',nutrientKey:'thiamine',label:'Thiamine',origin:'plant'},amountPer100g:.2,unit:'mg'}]};
+test('canonical pipeline keeps unsupported stages null rather than manufacturing values',()=>{const values=calculateNutrientPipeline([{food:lentils,grams:100}],{gastricAcid:'normal'});const thiamine=values.find(x=>x.nutrientKey==='thiamine');assert.equal(thiamine?.modelStage,'GROSS_ONLY');assert.equal(thiamine?.absorbed,null);assert.equal(thiamine?.gross.value,.2);});
+test('canonical pipeline retains form source and finite bounded iron absorption',()=>{const iron=calculateNutrientPipeline([{food:lentils,grams:100}],{gastricAcid:'low'}).find(x=>x.nutrientKey==='iron');assert.equal(iron?.sourceContributions.plant,3);assert.ok((iron?.absorbed?.min??-1)>=0);assert.ok((iron?.absorbed?.max??Infinity)<=3);});
+test('USDA preview rejects ambiguous and unsafe records without accepting them',()=>{const preview=previewUsdaRows([{food_id:'f',nutrient_form_id:'n',amount_per_100g:2,unit:'mg'},{food_id:'f',nutrient_form_id:'n',amount_per_100g:2,unit:'mg'},{food_id:'unknown',nutrient_form_id:'n',amount_per_100g:-1,unit:'bad'}],new Set(['f']),new Set(['n']));assert.equal(preview.dryRun,true);assert.equal(preview.accepted.length,1);assert.equal(preview.issues.length,2);});
+test('guardrails reject negative, NaN, and infinite values',()=>{for(const value of [-1,Number.NaN,Infinity])assert.throws(()=>assertFiniteNonNegative(value,'amount'));});

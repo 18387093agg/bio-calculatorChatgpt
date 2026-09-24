@@ -1,2 +1,5 @@
 # Calculation model
-The pipeline is portion normalization → food/method preparation retention → gross intake by chemical form → bounded meal-context estimate where evidence/model support exists → absorbed range → documented conversion when available → target comparison. Yield and retention are separate. Unsupported quantitative absorption is returned as `unavailable`, never zero or fabricated.
+
+The canonical pipeline is portion normalization → food/method preparation yield → nutrient retention → chemical form → gross intake → qualified meal interactions → bioaccessibility → absorption → systemic pool → conversion → active pool → target comparison. It is orchestrated by `calculateNutrientPipeline`; unsupported stages are `null`, never fabricated zeroes.
+
+Yield and retention remain distinct. Form-aware iron and B12 ranges are marked as modeled estimates with evidence/assumptions; unsupported nutrients stop at gross intake. The thiamine project optimization model is energy-based (0.60–0.68 mg/1000 kcal), separate from official references and explicitly a model assumption.
