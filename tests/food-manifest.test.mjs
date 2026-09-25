@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{readFileSync}from'node:fs';
+test('production FDC manifest defines at least 87 unique foods without invented nutrients',()=>{const data=JSON.parse(readFileSync('data/fdc-food-manifest.json'));assert.ok(data.foods.length>=87);assert.equal(new Set(data.foods).size,data.foods.length);assert.equal(JSON.stringify(data).includes('nutrients'),false);});

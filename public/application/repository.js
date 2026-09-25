@@ -4,7 +4,7 @@
  * adapter is configured by the host application.
  */
 const KEY = 'bio-calculator.workspace.v1';
-const defaults = { meal: [], supplements: [], biomarkers: [], overrides: {}, history: [], settings: { language: 'en', gastricAcid: 'normal' } };
+const defaults = { meal: [], supplements: [], biomarkers: [], overrides: {}, history: [], settings: { language: 'en', gastricAcid: 'normal', energyKcal: 2500 } };
 const clone = value => JSON.parse(JSON.stringify(value));
 
 export function createWorkspaceRepository(storage = globalThis.localStorage) {

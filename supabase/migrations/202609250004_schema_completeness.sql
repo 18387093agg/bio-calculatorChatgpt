@@ -1,0 +1,45 @@
+-- Representation/provenance/RLS completion. Authenticated persistence still requires a server/user-token adapter.
+alter table foods add column external_source text;
+alter table foods add column external_id text;
+alter table foods add column raw_cooked_basis text check(raw_cooked_basis in ('raw','cooked','ready_to_eat'));
+alter table foods add constraint foods_external_identity unique(external_source,external_id);
+alter table nutrient_forms add column chemical_form text;
+alter table nutrient_forms add column evidence_id text references evidence_sources(id);
+alter table food_nutrients add constraint food_nutrients_unit_check check(unit in ('g','mg','µg','kcal'));
+alter table food_nutrients add constraint food_nutrients_provenance_check check(evidence_id is not null);
+alter table targets drop constraint targets_reference_type_check;
+alter table targets add constraint targets_reference_type_check check(reference_type in ('rda','ai','pri','ear','ar','optimal_min','optimal_max','ul'));
+alter table targets add constraint targets_age_order check(age_min is null or age_max is null or age_min <= age_max);
+alter table retention_factors add constraint retention_requires_evidence check(evidence_id is not null);
+alter table food_preparation_profiles add constraint yield_requires_evidence check(evidence_id is not null);
+alter table biomarker_results add column marker_id uuid references biomarker_definitions(id);
+alter table biomarker_results add constraint biomarker_lab_range_order check(lab_low is null or lab_high is null or lab_low <= lab_high);
+
+-- Canonical reference data is readable to clients, but only privileged migrations/server roles write it.
+alter table evidence_sources enable row level security; alter table nutrients enable row level security;
+alter table nutrient_forms enable row level security; alter table foods enable row level security;
+alter table food_nutrients enable row level security; alter table preparation_methods enable row level security;
+alter table food_preparation_profiles enable row level security; alter table retention_factors enable row level security;
+alter table targets enable row level security; alter table interactions enable row level security;
+alter table supplements enable row level security; alter table supplement_components enable row level security;
+alter table target_model_rules enable row level security; alter table model_assumptions enable row level security;
+alter table biomarker_definitions enable row level security; alter table biomarker_reference_ranges enable row level security;
+alter table biomarker_interpretation_rules enable row level security; alter table food_composition_metadata enable row level security;
+create policy "public evidence read" on evidence_sources for select using (true);
+create policy "public nutrients read" on nutrients for select using (true);
+create policy "public forms read" on nutrient_forms for select using (true);
+create policy "public foods read" on foods for select using (true);
+create policy "public food nutrients read" on food_nutrients for select using (true);
+create policy "public methods read" on preparation_methods for select using (true);
+create policy "public preparation profiles read" on food_preparation_profiles for select using (true);
+create policy "public retention read" on retention_factors for select using (true);
+create policy "public targets read" on targets for select using (true);
+create policy "public interactions read" on interactions for select using (true);
+create policy "public supplements read" on supplements for select using (true);
+create policy "public supplement components read" on supplement_components for select using (true);
+create policy "public target rules read" on target_model_rules for select using (true);
+create policy "public assumptions read" on model_assumptions for select using (true);
+create policy "public biomarker definitions read" on biomarker_definitions for select using (true);
+create policy "public biomarker ranges read" on biomarker_reference_ranges for select using (true);
+create policy "public biomarker rules read" on biomarker_interpretation_rules for select using (true);
+create policy "public food metadata read" on food_composition_metadata for select using (true);
