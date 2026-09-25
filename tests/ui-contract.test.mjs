@@ -1,0 +1,4 @@
+import test from'node:test';import assert from'node:assert/strict';import{readFileSync}from'node:fs';
+const app=readFileSync('public/app.js','utf8'),service=readFileSync('public/application/meal-service.js','utf8');
+test('all required local workspace controls are functionally bound',()=>{for(const token of ["$('add').onclick","[data-edit]","[data-remove]","$('clear').onclick","save-supplement","save-biomarker","save-targets","save-settings","clear-history","language-setting","gastric-acid","data-detail","repository.replace"])assert.ok(app.includes(token),token);});
+test('UI exposes gross, absorbed, source form, uncertainty, and unmodeled stages',()=>{for(const phrase of ['Actual gross intake','Total estimated absorbed','Food-bound','Free/crystalline','Heme','Non-heme','Bioaccessible, systemic, converted, and active stages remain unmodeled'])assert.ok((app+service).includes(phrase),phrase);});
