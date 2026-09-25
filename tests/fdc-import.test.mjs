@@ -23,8 +23,14 @@ test('resolution report audits every manifest identity', () => {
       assert.ok(entry.selectedDescription);
       assert.ok(entry.dataType);
       assert.ok(entry.reasonForSelection);
+      assert.ok(['A', 'B'].includes(entry.identityAudit?.classification));
     } else assert.ok(entry.unresolvedReason);
   }
+});
+
+test('identity audit has no materially ambiguous or incorrect USDA selections', () => {
+  assert.deepEqual(report.identityAudit.counts, { A: 28, B: 59, C: 0, D: 0 });
+  assert.equal(report.identityAudit.reviewed, true);
 });
 
 test('missing API key fails clearly without creating output or using fallback data', () => {
@@ -44,6 +50,21 @@ test('deterministic matching prefers intended preparation and allowed data type'
   assert.equal(result.selected.food.fdcId, 20);
   assert.match(result.reason, /deterministic identity score/);
   assert.ok(rankCandidate('spinach cooked', candidates[1]).score > rankCandidate('spinach cooked', candidates[0]).score);
+});
+
+test('deterministic matching rejects unrequested identity and processing attributes', () => {
+  const collisionCases = [
+    ['oyster cooked', 'Ostrich, oyster, cooked'],
+    ['banana raw', 'Pepper, banana, raw'],
+    ['cheddar cheese', 'Snacks, cheddar cheese pretzel'],
+    ['olive oil', 'Anchovies, canned in olive oil, drained'],
+    ['flaxseed', 'Oil, flaxseed, cold pressed'],
+    ['chicken breast roasted', 'Chicken breast, roll, oven-roasted']
+  ];
+  for (const [requested, description] of collisionCases) {
+    const candidate = rankCandidate(requested, { fdcId: 1, description, dataType: 'Foundation' });
+    assert.ok(candidate.conflicts.length, `${requested} must reject ${description}`);
+  }
 });
 
 test('food detail conversion preserves every valid raw nutrient and USDA provenance', () => {

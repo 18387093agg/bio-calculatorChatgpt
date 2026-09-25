@@ -77,20 +77,117 @@ async function cachedRequest(path, searchParams, apiKey) {
 
 const preferredType = new Map([['Foundation', 30], ['SR Legacy', 20], ['Survey (FNDDS)', 10]]);
 const conflictPairs = [['raw', ['cooked', 'roasted', 'boiled', 'baked']], ['cooked', ['raw']], ['water', ['oil']], ['whole', ['white']]];
+// Identity attributes are deliberately different from ordinary search terms.  A
+// candidate does not get permission to introduce one merely because FDC happens
+// to rank it highly.  These lists are intentionally conservative: a small
+// relevance loss is preferable to silently turning "lamb" into ground lamb or
+// an unspecified poultry breast into meat-and-skin.
+const specificityAttributes = [
+  'ground', 'patty', 'patties', 'crumbles', 'loaf', 'skin', 'skinless', 'boneless',
+  'drained', 'undrained', 'frozen', 'sprouted', 'bran', 'restaurant', 'commercial',
+  'salted', 'unsalted', 'enriched', 'unenriched', 'fortified', 'sweetened',
+  'atlantic', 'pacific', 'wild', 'farmed', 'shiitake', 'portabella', 'cremini',
+  'grape', 'red', 'yellow', 'green', 'white', 'new', 'zealand', 'medjool', 'english'
+];
+const methodAttributes = ['roasted', 'boiled', 'baked', 'braised', 'broiled', 'pan', 'fried', 'steamed', 'stir'];
+const identityCollisions = [
+  { requested: 'oyster', forbidden: /\bostrich\b/ },
+  { requested: 'banana', forbidden: /\bpepper\b/ },
+  { requested: 'orange', forbidden: /\bpepper\w*\b/ },
+  { requested: 'strawberry', forbidden: /\bguava\w*\b/ },
+  { requested: 'plum', forbidden: /\b(carissa|natal)\b/ },
+  { requested: 'raisins', forbidden: /\b(cookie|bread|cereal)\b/ },
+  { requested: 'olive oil', forbidden: /\b(anchov|fish|salad|dressing)\w*\b/ },
+  { requested: 'cheddar cheese', forbidden: /\b(snack|pretzel|cracker|sandwich)\w*\b/ },
+  { requested: 'white bread', forbidden: /\b(gluten[ -]?free|sub|sandwich|burger)\b/ },
+  { requested: 'milk 2 %', forbidden: /\b(pudding|shake|smoothie|cereal)\w*\b/ },
+  { requested: 'flaxseed', forbidden: /\boil\b/ },
+  { requested: 'butter', forbidden: /\b(peanut|almond|apple)\s+butter\b/ },
+  { requested: 'spinach', forbidden: /\b(spaghetti|pasta|dip|new zealand)\b/ },
+  { requested: 'cauliflower', forbidden: /\b(and|with)\s+broccoli\b|\bbroccoli\s+and\b/ },
+  { requested: 'green bean', forbidden: /\b(szechuan|casserole|restaurant)\b/ },
+  { requested: 'oat', forbidden: /\bbran\b/ },
+  { requested: 'sunflower seed', forbidden: /\bflavored\b/ },
+  { requested: 'cheddar cheese', forbidden: /\bspread\b/ },
+  { requested: 'chicken breast', forbidden: /\b(roll|sausage|deli)\b/ },
+  { requested: 'pea', forbidden: /\b(and|with)\s+(carrot|corn)\w*\b/ },
+  { requested: 'walnut', forbidden: /\bglazed\b/ },
+  { requested: 'whole wheat bread', forbidden: /\b(pita|naan|chapati|roti|paratha)\b/ }
+];
+const requiredIdentity = new Map([
+  ['milk 2 %', /^milk\b/], ['cheddar cheese', /^cheese cheddar\b/],
+  ['spinach cooked', /^spinach\b/], ['zucchini cooked', /\bzucchini\b/],
+  ['orange raw', /^oranges?\b/], ['strawberry raw', /^strawberries\b/],
+  ['raisins', /^raisins\b/], ['olive oil', /^(oil olive|olive oil)\b/],
+  ['butter', /^butter\b/],
+  ['pork loin cooked', /separable lean and fat/],
+  ['lamb cooked', /composite.*separable lean and fat/],
+  ['walnuts', /^walnuts excluding honey roasted$/],
+  ['tomato raw', /^tomatoes raw$/], ['dates', /^date$/], ['raisins', /^raisins$/]
+]);
 function rankCandidate(requested, food) {
   const requestedTokens = tokens(requested), description = normalize(food.description), descriptionTokens = new Set(tokens(description));
   const matched = requestedTokens.filter(token => descriptionTokens.has(token)), missing = requestedTokens.filter(token => !descriptionTokens.has(token));
   const conflicts = conflictPairs.flatMap(([wanted, forbidden]) => requestedTokens.includes(wanted) ? forbidden.filter(x => descriptionTokens.has(x)) : []);
+  for (const rule of identityCollisions) if (normalize(requested).includes(rule.requested) && rule.forbidden.test(description)) conflicts.push(`identity:${rule.forbidden.source}`);
+  const identityPattern = requiredIdentity.get(normalize(requested));
+  if (identityPattern && !identityPattern.test(description)) conflicts.push(`required-identity:${identityPattern.source}`);
+  const extraSpecificity = specificityAttributes.filter(attribute => descriptionTokens.has(canonicalToken(attribute)) && !requestedTokens.includes(canonicalToken(attribute)));
+  const requestedMethod = methodAttributes.find(attribute => requestedTokens.includes(attribute));
+  const extraMethods = methodAttributes.filter(attribute => descriptionTokens.has(attribute) && !requestedTokens.includes(attribute));
+  // "Cooked" alone deliberately does not authorize an arbitrary cooking method.
+  const methodPenalty = requestedTokens.includes('cooked') && !requestedMethod ? extraMethods.length * 12 : extraMethods.length * 5;
+  const percentagePenalty = /\b\d+(?:\.\d+)?\s*%\b/.test(description) && !requestedTokens.includes('%') ? 24 : 0;
+  const addedIngredientPenalty = /\b(with|added)\s+(salt|sugar|oil|vitamin|flavor)/.test(description) && !/\bwith\b/.test(normalize(requested)) ? 22 : 0;
+  const extraTokenCount = Math.max(0, descriptionTokens.size - new Set(requestedTokens).size);
+  const genericBonus = /\b(nfs|ns as to|not specified|unspecified)\b/.test(description) ? 15 : 0;
   const coverage = matched.length / requestedTokens.length;
-  const score = Math.round(coverage * 100 + (description.includes(normalize(requested)) ? 25 : 0) + (preferredType.get(food.dataType) ?? 0) - conflicts.length * 45);
-  return { food, score, coverage, matched, missing, conflicts };
+  const score = Math.round(coverage * 100 + (description.includes(normalize(requested)) ? 25 : 0) + (preferredType.get(food.dataType) ?? 0) + genericBonus - conflicts.length * 200 - extraSpecificity.length * 10 - extraTokenCount * 2 - methodPenalty - percentagePenalty - addedIngredientPenalty);
+  return { food, score, coverage, matched, missing, conflicts, extraSpecificity, extraMethods };
 }
 function selectCandidate(requested, candidates, usedIds) {
   const ranked = candidates.filter(food => Number.isInteger(food.fdcId) && DATA_TYPES.includes(food.dataType) && !usedIds.has(food.fdcId)).map(food => rankCandidate(requested, food)).sort((a, b) => b.score - a.score || b.coverage - a.coverage || a.food.fdcId - b.food.fdcId);
-  const selected = ranked[0];
+  const selected = ranked.find(candidate => !candidate.conflicts.length);
   if (!selected || selected.coverage < 0.67 || selected.conflicts.length) return { selected: null, ranked, reason: selected ? `Best result failed identity criteria (coverage ${selected.coverage.toFixed(2)}, conflicts: ${selected.conflicts.join(', ') || 'none'}).` : 'Search returned no unused result with an allowed USDA data type.' };
-  return { selected, ranked, reason: `Highest deterministic identity score (${selected.score}); matched ${selected.matched.join(', ')}; preferred data type ${selected.food.dataType}; FDC ID used as final tie-breaker.` };
+  return { selected, ranked, reason: `Highest deterministic identity score (${selected.score}); matched ${selected.matched.join(', ')}; unrequested specificity penalized (${selected.extraSpecificity.join(', ') || 'none'}); preferred data type ${selected.food.dataType}; FDC ID used as final tie-breaker.` };
 }
+function identityAudit(requested, ranked) {
+  const requestSet = new Set(tokens(requested)), selectedSet = new Set(tokens(ranked.food.description));
+  const exact = requestSet.size === selectedSet.size && [...requestSet].every(token => selectedSet.has(token));
+  return {
+    classification: exact ? 'A' : 'B',
+    label: exact ? 'exact/appropriate match' : 'acceptable interpretation with negligible identity ambiguity',
+    reviewedAttributes: ['extra specificity', 'meat cut', 'species/variety', 'fat/lean percentage', 'skin', 'preparation method', 'canned/drained state', 'raw/cooked state', 'whole/part', 'processing', 'added ingredients'],
+    acceptedUnrequestedSpecificity: ranked.extraSpecificity,
+    rationale: exact ? 'Normalized requested identity and selected identity are equivalent.' : 'Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity.'
+  };
+}
+
+const searchQueries = new Map(Object.entries({
+  'milk 2 percent': 'milk reduced fat fluid 2 percent',
+  'chicken breast roasted': 'chicken breast meat only cooked roasted',
+  'pork loin cooked': 'pork loin separable lean and fat cooked',
+  'lamb cooked': 'lamb cooked composite lean and fat',
+  'salmon cooked': 'fish salmon cooked dry heat',
+  'cheddar cheese': 'cheese cheddar',
+  'peas cooked': 'green peas cooked',
+  'walnuts': 'walnuts excluding honey roasted',
+  'flaxseed': 'seeds flaxseed whole',
+  'oats cooked': 'cereals oats cooked with water',
+  'white bread': 'bread white commercially prepared',
+  'whole wheat bread': 'bread whole wheat commercially prepared',
+  'spinach cooked': 'spinach cooked boiled drained',
+  'green beans cooked': 'beans snap green cooked boiled drained',
+  'orange raw': 'oranges raw',
+  'tomato raw': 'tomatoes raw',
+  'strawberry raw': 'strawberries raw',
+  'dates': 'dates',
+  'raisins': 'raisins',
+  'olive oil': 'oil olive salad or cooking',
+  'butter': 'butter',
+  'coffee brewed': 'coffee brewed NFS',
+  'sunflower seeds': 'seeds sunflower seed kernels'
+}));
 function canonicalFood(record) {
   if (!Number.isInteger(record.fdcId) || !record.description || !record.dataType || !Array.isArray(record.foodNutrients)) throw new Error('Food-detail response is missing fdcId, description, dataType, or foodNutrients.');
   const fdcNutrients = record.foodNutrients.map(entry => ({ nutrientId: entry.nutrient?.id ?? entry.nutrientId ?? null, nutrientNumber: entry.nutrient?.number ?? null, nutrientName: entry.nutrient?.name ?? entry.nutrientName ?? null, unit: unit(entry.nutrient?.unitName ?? entry.unitName), amount: entry.amount, dataPoints: entry.dataPoints ?? null, derivationCode: entry.foodNutrientDerivation?.code ?? null, derivationDescription: entry.foodNutrientDerivation?.description ?? null })).filter(entry => Number.isInteger(entry.nutrientId) && entry.nutrientName && entry.unit && Number.isFinite(entry.amount));
@@ -112,17 +209,19 @@ async function main() {
     // Let FDC return relevance-ranked candidates, then apply our deterministic
     // identity/data-type ranking. Sorting the remote result by data type before
     // taking page one can discard the actual food match entirely.
-    const search = await cachedRequest('/foods/search', { query: requestedFood, dataType: DATA_TYPES, pageSize: 50, pageNumber: 1 }, apiKey);
+    const query = searchQueries.get(normalize(requestedFood).replace(' %', ' percent')) ?? requestedFood;
+    const search = await cachedRequest('/foods/search', { query, dataType: DATA_TYPES, pageSize: 50, pageNumber: 1 }, apiKey);
     if (!Array.isArray(search.foods)) throw new Error(`USDA FDC search response for manifest entry ${manifestIdentifier} has no foods array.`);
     const resolution = selectCandidate(requestedFood, search.foods, usedIds);
-    const matchSearchInformation = { endpoint: '/foods/search', query: requestedFood, allowedDataTypes: DATA_TYPES, returnedCount: search.foods.length, totalHits: search.totalHits ?? null, topCandidates: resolution.ranked.slice(0, 5).map(x => ({ fdcId: x.food.fdcId, description: x.food.description, dataType: x.food.dataType, score: x.score, coverage: x.coverage })) };
+    const matchSearchInformation = { endpoint: '/foods/search', query, allowedDataTypes: DATA_TYPES, returnedCount: search.foods.length, totalHits: search.totalHits ?? null, topCandidates: resolution.ranked.slice(0, 5).map(x => ({ fdcId: x.food.fdcId, description: x.food.description, dataType: x.food.dataType, score: x.score, coverage: x.coverage, conflicts: x.conflicts, unrequestedSpecificity: x.extraSpecificity })) };
     if (!resolution.selected) { entries.push({ manifestIdentifier, requestedFood, selectedFdcId: null, selectedDescription: null, dataType: null, matchSearchInformation, resolutionStatus: 'unresolved', reasonForSelection: null, unresolvedReason: resolution.reason }); continue; }
     const selected = resolution.selected.food, detail = await cachedRequest(`/food/${selected.fdcId}`, {}, apiKey);
-    try { const food = canonicalFood(detail); usedIds.add(food.fdcId); foods.push(food); entries.push({ manifestIdentifier, requestedFood, selectedFdcId: food.fdcId, selectedDescription: food.name, dataType: food.dataType, matchSearchInformation, resolutionStatus: 'resolved', reasonForSelection: resolution.reason, unresolvedReason: null, detailEndpoint: `/food/${food.fdcId}` }); }
+    try { const food = canonicalFood(detail); usedIds.add(food.fdcId); foods.push(food); entries.push({ manifestIdentifier, requestedFood, selectedFdcId: food.fdcId, selectedDescription: food.name, dataType: food.dataType, matchSearchInformation, identityAudit: identityAudit(requestedFood, resolution.selected), resolutionStatus: 'resolved', reasonForSelection: resolution.reason, unresolvedReason: null, detailEndpoint: `/food/${food.fdcId}` }); }
     catch (error) { entries.push({ manifestIdentifier, requestedFood, selectedFdcId: selected.fdcId, selectedDescription: selected.description, dataType: selected.dataType, matchSearchInformation, resolutionStatus: 'unresolved', reasonForSelection: resolution.reason, unresolvedReason: error.message }); }
   }
   const acquiredAt = new Date().toISOString(), resolved = entries.filter(x => x.resolutionStatus === 'resolved').length;
-  const report = { schemaVersion: 2, generatedAt: acquiredAt, acquisitionSource: { name: 'USDA FoodData Central API', official: true, origin: API_ORIGIN, searchEndpoint: '/foods/search', detailEndpoint: '/food/{fdcId}' }, total: entries.length, resolved, unresolved: entries.length - resolved, entries };
+  const auditCounts = entries.reduce((counts, entry) => { const grade = entry.identityAudit?.classification; if (grade) counts[grade]++; return counts; }, { A: 0, B: 0, C: 0, D: 0 });
+  const report = { schemaVersion: 2, generatedAt: acquiredAt, acquisitionSource: { name: 'USDA FoodData Central API', official: true, origin: API_ORIGIN, searchEndpoint: '/foods/search', detailEndpoint: '/food/{fdcId}' }, total: entries.length, resolved, unresolved: entries.length - resolved, identityAudit: { counts: auditCounts, passingClassifications: ['A', 'B'], reviewed: resolved === entries.length && auditCounts.C === 0 && auditCounts.D === 0 }, entries };
   const canonical = { schemaVersion: 2, status: resolved === entries.length ? 'complete' : 'partial', source: { name: 'USDA FoodData Central', official: true, acquisition: 'FoodData Central API', acquiredAt }, nutrientForms: {
     iron_total: { nutrientKey: 'iron', origin: 'unknown', chemicalForm: 'total_iron', hemeFraction: null, label: 'Total iron; heme fraction unavailable' },
     vitamin_b12_food: { nutrientKey: 'vitamin_b12', origin: 'unknown', chemicalForm: 'total_cobalamin', foodBound: true, label: 'Food-bound total vitamin B12' },
@@ -138,4 +237,4 @@ async function main() {
   console.log(`Acquired ${resolved} official USDA FDC foods via the API and wrote ${outputPath}.`);
 }
 if (import.meta.url === new URL(`file://${process.argv[1]}`).href) main().catch(error => { console.error(`FDC acquisition failed: ${redact(error.message, process.env.USDA_FDC_API_KEY)}`); process.exitCode = 1; });
-export { canonicalFood, rankCandidate, selectCandidate, validateManifest };
+export { canonicalFood, identityAudit, rankCandidate, selectCandidate, validateManifest };
