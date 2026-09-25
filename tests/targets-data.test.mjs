@@ -1,4 +1,4 @@
 import test from'node:test';import assert from'node:assert/strict';import{readFileSync}from'node:fs';import{thiamineTarget}from'../public/calculation-engine.js';
-const targets=JSON.parse(readFileSync('public/demo-foods.json')).targets;
+const targets=JSON.parse(readFileSync('data/reference-targets.json'));
 test('every official reference retains population and provenance metadata',()=>{for(const [key,target]of Object.entries(targets)){for(const field of ['jurisdiction','population','ageMin','lifeStage','sex','unit','source','sourceUrl','evidenceId'])assert.notEqual(target[field],undefined,`${key}.${field}`);assert.ok(target.rda!==undefined||target.ai!==undefined)} });
 test('thiamine project target remains distinct and energy based',()=>{assert.deepEqual(thiamineTarget(2500),{min:1.5,max:1.7,modelKey:'thiamine.energy.optimization.v1'});assert.equal(targets.thiamine.rda,1.2);assert.equal(targets.thiamine.optimalMin,undefined)});

@@ -1,6 +1,6 @@
 # Bio Calculator MVP
 
-A dependency-free nutrition calculator with a canonical calculation engine. It loads `public/canonical-foods.json` when generated from an official USDA FDC export and otherwise shows an explicit ten-food fallback warning. Supabase is not required for the local workspace.
+A dependency-free nutrition calculator with a canonical calculation engine. Production loads only `public/canonical-foods.json`, generated from authenticated USDA FoodData Central API responses. Supabase is not required for the local workspace.
 
 ## Quick start
 
@@ -8,7 +8,6 @@ A dependency-free nutrition calculator with a canonical calculation engine. It l
 git clone <repository-url>
 cd bio-calculator
 npm install
-cp .env.example .env.local   # optional for this demo; do not add secrets to git
 npm run dev
 ```
 
@@ -26,9 +25,9 @@ npm start
 
 The production server serves the built `dist/public` bundle at port 3000. Set `PORT` to choose another port.
 
-## Demo/reference data
+## Canonical food data
 
-`public/demo-foods.json` is the single demo composition data source. It includes beef, chicken, egg, milk, rice, potato, spinach, lentils, orange, and oats. The file identifies USDA FoodData Central as the source and is deliberately scoped to MVP demonstrations; verify values and retain FDC provenance before a clinical/production data release.
+`data/fdc-food-manifest.json` defines the required food identities. With `USDA_FDC_API_KEY` set only in the process environment, `npm run import:fdc` resolves the manifest through the official API and atomically writes `public/canonical-foods.json` plus `data/fdc-resolution-report.json`. The application fails visibly if the complete canonical dataset is unavailable; it never substitutes sample composition data.
 
 ## Supabase (optional persistence)
 
@@ -37,6 +36,6 @@ The public calculator deliberately has no browser Supabase dependency. To add pe
 1. Create a Supabase project and set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local`.
 2. Apply `supabase/migrations/202609230001_normalized_nutrition.sql` from a clean database using the Supabase CLI or SQL editor.
 3. Import reference data using the validated importer workflow in `docs/importer-spec.md`; never use a service-role key in browser code.
-4. Keep demo mode available while the database has no validated food rows.
+4. Keep SQL reference records aligned with the canonical USDA identifiers and provenance.
 
 A local Supabase workflow is optional: install the Supabase CLI, run `supabase start`, then apply the migration with `supabase db reset`. The MVP is usable without it.
