@@ -33,3 +33,32 @@ Hypochlorhydria includes a clinician-discussion recommendation for **Betaine HCl
 ## Unchanged supporting models
 
 `thiamine.energy.optimization.v1` remains an **E** project target of 0.60–0.68 mg/1000 kcal, separate from official references. `pral.remer_manz.v1` remains a **C** fitted estimate of renal acid load. Preparation yield/retention are **A** only when record-specific USDA evidence is provided. Official RDA/AI/EAR/PRI/AR/UL records are **B** reference values, not physiology coefficients.
+
+## Condition-specific evidence audit: low gastric acid / hypochlorhydria
+
+No condition-specific numerical adjustment is enabled. This is an executable scientific boundary, rather than a missing fallback multiplier.
+
+| Nutrient/form and context | What human evidence measures | Classification in this calculator | Reason no coefficient is applied |
+|---|---|---|---|
+| Food-bound B12; pharmacological acid suppression | Marcuard et al. (1994, PubMed 8276393) used an acute protein-bound cobalamin absorption test in 10 healthy volunteers during omeprazole exposure. | Qualitative absorption mechanism; `b12.food_bound.pii_acid_suppression.v1` is disabled (F, low confidence). | It is a small, acute medication study, not documented spontaneous hypochlorhydria/achlorhydria; its test dose and baseline are not compatible with this app's 30–60% healthy dietary range. It does not measure free/crystalline B12 or long-term nutrient status. Medication exposure is therefore a distinct context, not a diagnosis. |
+| Food-bound B12; suspected, documented, or achlorhydric state | Authoritative DRI/review evidence supports acid/protein release as a prerequisite before intrinsic-factor binding. | Qualitative absorption mechanism; no modelled target. | Deficiency prevalence and mechanistic release cannot be converted into an individual absorption fraction. Suspected state never enables a number. |
+| Free/crystalline B12 | The food-protein release step is bypassed. | No condition penalty. | There is no direct evidence here for a low-acid coefficient; intrinsic-factor capacity is separately unmodelled. |
+| Non-heme iron; suspected, documented, or achlorhydric state | Human nutrition literature supports acid-dependent solubilization/reduction of non-heme iron. | Qualitative absorption mechanism; `iron.nonheme.hypochlorhydria.v1` is disabled (F, low confidence). | No validated nutrient/form-specific human low-acid dietary absorption range suitable for an individual calculator was identified. Serum iron/ferritin and deficiency prevalence are not absorption coefficients. |
+| Heme iron | No direct low-acid quantitative coefficient identified. | Unchanged healthy heme range. | The model deliberately does not extrapolate the non-heme mechanism to heme iron. |
+
+The UI accepts **suspected**, **documented hypochlorhydria**, **documented achlorhydria**, and a separate **acid-suppressing medication** context. All retain the mechanism notice, but none changes gross intake, the healthy absorption estimate, official RDA, or creates a personalized modeled requirement. Betaine HCl remains only a clinician-discussion item: evidence that it transiently changes gastric pH does not establish a dose, treatment claim, or B12/iron restoration percentage.
+
+## Condition-specific evidence audit: celiac disease
+
+The UI distinguishes **active/untreated** from **treated/adherent gluten-free diet**. No nutrient-specific numerical celiac coefficient is enabled, and no personalized modeled requirement is derived. The 2023 ACG guideline and adult celiac nutrition reviews support assessing iron, folate, B12, vitamin D, calcium, zinc, and magnesium, but they provide clinical-risk/serum/intake and heterogeneous recovery evidence—not a nutrient-form-specific meal absorption fraction.
+
+| State | Nutrients reviewed | Physiological interpretation | Executable classification |
+|---|---|---|---|
+| Active/untreated | iron, folate, vitamin B12, vitamin D, calcium, zinc, magnesium | Villous mucosal injury can affect **absorption**. The cited evidence does not quantify each nutrient's absorbed fraction from a defined oral dose against healthy controls. | One qualitative, provenance-preserving absorption mechanism (`celiac.active.mucosal-malabsorption`); disabled F model `celiac.active.mucosal-malabsorption.v1`. |
+| Treated/adherent | iron, folate, vitamin B12, vitamin D, calcium, zinc, magnesium | Gluten-free treatment can allow mucosal recovery; residual abnormal status may also reflect dietary intake, time to healing, adherence, or other causes. | One qualitative recovery/monitoring mechanism (`celiac.treated.recovery-monitoring`); disabled F model `celiac.treated.recovery.v1`. No permanent penalty and no assumed normalization percentage. |
+
+Thus none of these evidence records is treated as an absorption, loss, requirement, conversion, utilization, storage, or turnover coefficient unless it actually measures that stage. Official RDA/AI/EAR/UL records are unchanged; a “Personalized modeled requirement” is unavailable because the denominator (condition-adjusted absorption) is unavailable.
+
+## Combined low-acid and celiac selections
+
+Condition effects are selected by mechanism ID and state, then exposed together as provenance. They do **not** modify the healthy B12/iron ranges and therefore cannot be multiplied. In particular, low-acid food release and active-celiac mucosal absorption are distinct upstream mechanisms, but evidence does not establish independence or a joint coefficient; the combined result remains the healthy numeric range with two qualitative mechanism notices. This prevents both generic pathology multipliers and unsupported double counting.

@@ -4,6 +4,6 @@ export function calculateCanonical(entries:CanonicalEntry[],context?:{gastricAci
 export function normalizePortion(amountPer100g:number,grams:number,preparation?:null|{yield?:{min:number;max:number;evidenceId:string};retention?:{min:number;max:number;evidenceId:string}}):{amount:number;yieldFactor:number|null;retentionFactor:number|null;evidenceIds:string[];reason:string|null};
 export function thiamineTarget(energyKcal:number):{min:number;max:number;modelKey:string};
 export function estimateZincAbsorption(zincMg:number,phytateMg:number):{value:number;unit:'mg/day';status:'modeled';modelKey:string;confidence:'low';assumption:string};
-export function resolveConditionEffects(conditions:Array<string|{id:string;state?:string}>):Array<{conditionId:string;conditionName:string;mechanismId:string;stage:string;nutrients:string[];type:string;quantitative:boolean;evidenceClass:string;source:string;assumption:string;input:string|null}>;
+export function resolveConditionEffects(conditions:Array<string|{id:string;state?:string}>):Array<{conditionId:string;conditionName:string;mechanismId:string;stage:string;nutrients:string[];type:string;quantitative:boolean;evidenceClass:string;confidence?:string;source:string;applicableStates?:string[];assumption:string;input:string|null}>;
 export const CONDITION_CATALOG:ReadonlyArray<{id:string;name:string;description:string;inputs:string[];effects:ReadonlyArray<unknown>}>;
 export function progressScale(actual:number,target:Record<string,unknown>):{scale:number;actual:number;markers:Record<string,number>};

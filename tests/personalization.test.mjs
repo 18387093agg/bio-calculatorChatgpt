@@ -30,3 +30,50 @@ test('magnesium/vitamin D and magnesium/thiamine mechanisms remain qualitative, 
  assert.equal(describeMealInteractions('thiamine',{magnesiumStatus:'low'})[0].quantitative,false);
  assert.equal(describeMealInteractions('potassium',{ttfdMg:100}).length,0);
 });
+
+test('hypochlorhydria states preserve the healthy numeric baseline and form boundaries',()=>{
+ const entries=[
+  {nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},
+  {nutrientKey:'vitamin_b12',formId:'b12_free',origin:'supplement',foodBound:false,amount:2,unit:'µg'},
+  {nutrientKey:'iron',formId:'iron_nonheme',origin:'plant',amount:10,unit:'mg'},
+  {nutrientKey:'iron',formId:'iron_heme',origin:'animal',amount:10,unit:'mg'}];
+ const baseline=runNutrientPipeline(entries,{});
+ for(const state of ['suspected','documented','achlorhydria','acid_suppression']){
+  const result=runNutrientPipeline(entries,{conditions:[{id:'hypochlorhydria',state}]});
+  assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption),state);
+  const b12=result.find(x=>x.nutrientKey==='vitamin_b12'),iron=result.find(x=>x.nutrientKey==='iron');
+  assert.ok(b12.conditionEffects.every(x=>x.quantitative===false));
+  assert.ok(iron.conditionEffects.every(x=>x.quantitative===false));
+ }
+ const medication=resolveConditionEffects([{id:'hypochlorhydria',state:'acid_suppression'}]);
+ assert.deepEqual(medication.map(x=>x.mechanismId),['gastric-acid.medication-food-release']);
+});
+
+test('celiac state is explicit, qualitative, and leaves unrelated nutrients and RDA unchanged',()=>{
+ const entries=[{nutrientKey:'iron',formId:'iron_nonheme',origin:'plant',amount:10,unit:'mg'},{nutrientKey:'calcium',formId:'calcium',origin:'plant',amount:500,unit:'mg'},{nutrientKey:'thiamine',formId:'thiamine',origin:'plant',amount:1,unit:'mg'}];
+ const targets={iron:{rda:8,unit:'mg'},calcium:{rda:1000,unit:'mg'}};
+ const baseline=runNutrientPipeline(entries,{},targets);
+ for(const state of ['active_untreated','treated_adherent']){
+  const result=runNutrientPipeline(entries,{conditions:[{id:'celiac_disease',state}]},targets);
+  assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));
+  assert.equal(result.find(x=>x.nutrientKey==='iron').conditionEffects[0].input,state);
+  assert.equal(result.find(x=>x.nutrientKey==='calcium').conditionEffects[0].quantitative,false);
+  assert.equal(result.find(x=>x.nutrientKey==='thiamine').conditionEffects.length,0);
+  assert.equal(result.find(x=>x.nutrientKey==='iron').targetComparison.target.rda,8);
+ }
+});
+
+test('combined hypochlorhydria and active celiac preserve both mechanisms without double-counting coefficients',()=>{
+ const entries=[{nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},{nutrientKey:'iron',formId:'iron_nonheme',origin:'plant',amount:10,unit:'mg'}];
+ const baseline=runNutrientPipeline(entries,{});
+ const low=runNutrientPipeline(entries,{conditions:[{id:'hypochlorhydria',state:'documented'}]});
+ const celiac=runNutrientPipeline(entries,{conditions:[{id:'celiac_disease',state:'active_untreated'}]});
+ const both=runNutrientPipeline(entries,{conditions:[{id:'hypochlorhydria',state:'documented'},{id:'celiac_disease',state:'active_untreated'}]});
+ assert.deepEqual(both.map(x=>x.absorption),baseline.map(x=>x.absorption));
+ assert.deepEqual(low.map(x=>x.absorption),baseline.map(x=>x.absorption));
+ assert.deepEqual(celiac.map(x=>x.absorption),baseline.map(x=>x.absorption));
+ const b12=both.find(x=>x.nutrientKey==='vitamin_b12');
+ assert.deepEqual(b12.conditionEffects.map(x=>x.mechanismId),['gastric-acid.food-release','celiac.active.mucosal-malabsorption']);
+ assert.equal(new Set(b12.conditionEffects.map(x=>x.mechanismId)).size,b12.conditionEffects.length);
+ assert.ok(b12.conditionEffects.every(x=>x.quantitative===false));
+});
