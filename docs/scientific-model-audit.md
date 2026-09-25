@@ -6,10 +6,10 @@ This ledger records every physiological coefficient currently executable by the 
 |---|---|---|---|---|
 | `iron.heme.absorption_range.v1` | absorbed = gross heme × 0.15–0.35; food heme only | D | Hurrell & Egli, *Am J Clin Nutr* 2010; low | Population range, not personal absorption. |
 | `iron.nonheme.absorption_range.v1` | absorbed = gross non-heme × 0.03–0.12; food non-heme only | D | Hurrell & Egli 2010; low | Meal and iron-status effects are not individualized. |
-| `iron.nonheme.low_acid.v1` | non-heme range × 0.70 when gastric acid is low/absent | E | mechanistic evidence review; low | Exact penalty is not directly established; sensitivity assumption, disclosed in output. Heme is excluded. |
+| `iron.nonheme.low_acid.v1` | none | F | mechanistic evidence review; low | Qualitative mechanism retained, but the unsupported numeric penalty is disabled. Heme is excluded. |
 | `b12.food_bound.absorption_range.v1` | absorbed = food-bound gross × 0.30–0.60 | D | Institute of Medicine DRI chapter; low | Does not estimate intrinsic-factor capacity or dose saturation. |
 | `b12.free.absorption_range.v1` | absorbed = free/crystalline gross × 0.30–0.60 | D | Institute of Medicine DRI chapter; low | Only the bounded dietary-dose range; passive diffusion/high-dose supplements are not modeled. |
-| `b12.food_bound.low_acid.v1` | food-bound range × 0.65 when gastric acid is low/absent | E | food-cobalamin malabsorption literature; low | Sensitivity assumption, not patient-specific. Free B12 is excluded. |
+| `b12.food_bound.low_acid.v1` | none | F | food-cobalamin malabsorption literature; low | Qualitative mechanism retained, but the unsupported numeric penalty is disabled. Free B12 is excluded. |
 | `thiamine.energy.optimization.v1` | target = energy × 0.60–0.68 mg/1000 kcal | E | project model; low | Not an official RDA and not generalized to other nutrients. |
 | `pral.remer.manz.v1` | 0.49 protein + 0.037 phosphorus − 0.021 potassium − 0.026 magnesium − 0.013 calcium | C | Remer & Manz 1995; moderate | Estimates renal acid load, not blood pH. |
 | `preparation.retention.food_method.v1` | retained amount = normalized amount × record-specific retention range | A | USDA Table of Nutrient Retention Factors; moderate | May run only with an evidence-linked food/method/nutrient record. No universal cooking factor exists. |

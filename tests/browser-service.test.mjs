@@ -6,18 +6,20 @@ import { calculateNutrientPipeline } from '../.test-dist/src/calculation/pipelin
 import { createWorkspaceRepository } from '../public/application/repository.js';
 import { translateMarkup } from '../public/i18n/messages.js';
 
-test('source-aware frontend iron estimate does not apply the acid penalty to heme iron', () => {
+test('source-aware frontend applies no unsupported numeric gastric-acid iron penalty', () => {
   const value = { animal: 2, plant: 3, supplement: 0 };
   const normal = absorptionEstimate('iron', value, 'normal');
   const low = absorptionEstimate('iron', value, 'low');
   assert.deepEqual(low.sources[0][2], normal.sources[0][2]);
-  assert.ok(low.sources[1][2].max < normal.sources[1][2].max);
+  assert.deepEqual([low.sources[1][2].min, low.sources[1][2].max], [normal.sources[1][2].min, normal.sources[1][2].max]);
+  assert.match(low.sources[1][2].assumption, /no defensible numeric multiplier/);
 });
 
-test('frontend B12 estimate does not apply the food release penalty to free supplement', () => {
+test('frontend B12 estimate applies no unsupported numeric gastric-release penalty', () => {
   const normal = absorptionEstimate('vitamin_b12', { animal: 2, plant: 0, supplement: 10 }, 'normal');
   const low = absorptionEstimate('vitamin_b12', { animal: 2, plant: 0, supplement: 10 }, 'low');
-  assert.ok(low.sources[0][2].max < normal.sources[0][2].max);
+  assert.deepEqual([low.sources[0][2].min, low.sources[0][2].max], [normal.sources[0][2].min, normal.sources[0][2].max]);
+  assert.match(low.sources[0][2].assumption, /no defensible numeric multiplier/);
   assert.deepEqual(low.sources[1][2], normal.sources[1][2]);
 });
 

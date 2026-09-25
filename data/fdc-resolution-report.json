@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-25T03:56:57.836Z",
+  "generatedAt": "2026-09-25T04:16:32.116Z",
   "acquisitionSource": {
     "name": "USDA FoodData Central API",
     "official": true,
@@ -158,8 +158,8 @@
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 170198,
-            "description": "Beef, cured, breakfast strips, cooked",
+            "fdcId": 170200,
+            "description": "Beef, cured, corned beef, brisket, cooked",
             "dataType": "SR Legacy",
             "score": 83,
             "coverage": 0.6666666666666666,
@@ -167,8 +167,8 @@
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 170200,
-            "description": "Beef, cured, corned beef, brisket, cooked",
+            "fdcId": 170606,
+            "description": "Sausage, beef, cured, cooked, smoked",
             "dataType": "SR Legacy",
             "score": 83,
             "coverage": 0.6666666666666666,
@@ -566,71 +566,74 @@
     {
       "manifestIdentifier": "007-lamb-cooked",
       "requestedFood": "lamb cooked",
-      "selectedFdcId": 172480,
-      "selectedDescription": "Lamb, composite of trimmed retail cuts, separable lean and fat, trimmed to 1/4\" fat, choice, cooked",
-      "dataType": "SR Legacy",
+      "selectedFdcId": 2705905,
+      "selectedDescription": "Lamb, NS as to cut",
+      "dataType": "Survey (FNDDS)",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
-        "query": "lamb cooked composite lean and fat",
+        "query": "lamb cooked",
         "allowedDataTypes": [
           "Foundation",
           "SR Legacy",
           "Survey (FNDDS)"
         ],
         "returnedCount": 50,
-        "totalHits": 4065,
+        "totalHits": 2554,
         "topCandidates": [
           {
-            "fdcId": 172480,
-            "description": "Lamb, composite of trimmed retail cuts, separable lean and fat, trimmed to 1/4\" fat, choice, cooked",
-            "dataType": "SR Legacy",
-            "score": 94,
-            "coverage": 1,
+            "fdcId": 2705905,
+            "description": "Lamb, NS as to cut",
+            "dataType": "Survey (FNDDS)",
+            "score": 569,
+            "coverage": 0.5,
             "conflicts": [],
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 172546,
-            "description": "Lamb, composite of trimmed retail cuts, separable lean and fat, trimmed to 1/8\" fat, choice, cooked",
+            "fdcId": 172544,
+            "description": "Lamb, ground, cooked, broiled",
             "dataType": "SR Legacy",
             "score": 94,
             "coverage": 1,
             "conflicts": [],
-            "unrequestedSpecificity": []
+            "unrequestedSpecificity": [
+              "ground"
+            ]
           },
           {
-            "fdcId": 174398,
-            "description": "Lamb, Australian, imported, fresh, composite of trimmed retail cuts, separable lean and fat, trimmed to 1/8\" fat, cooked",
+            "fdcId": 172573,
+            "description": "Lamb, Australian, imported, fresh, separable fat, cooked",
             "dataType": "SR Legacy",
             "score": 90,
             "coverage": 1,
             "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
-            "fdcId": 174337,
-            "description": "Lamb, New Zealand, imported, frozen, composite of trimmed retail cuts, separable lean and fat, cooked",
-            "dataType": "SR Legacy",
-            "score": 64,
-            "coverage": 1,
-            "conflicts": [],
             "unrequestedSpecificity": [
-              "frozen",
-              "new",
-              "zealand"
+              "australian",
+              "imported"
             ]
           },
           {
-            "fdcId": 174385,
-            "description": "Lamb, New Zealand, imported, frozen, composite of trimmed retail cuts, separable lean and fat, trimmed to 1/8\" fat, cooked",
+            "fdcId": 172656,
+            "description": "Lamb, Australian, imported, fresh, seam fat, cooked",
             "dataType": "SR Legacy",
-            "score": 58,
+            "score": 90,
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": [
-              "frozen",
-              "new",
-              "zealand"
+              "australian",
+              "imported"
+            ]
+          },
+          {
+            "fdcId": 174891,
+            "description": "Lamb, Australian, imported, fresh, external fat, cooked",
+            "dataType": "SR Legacy",
+            "score": 90,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": [
+              "australian",
+              "imported"
             ]
           }
         ]
@@ -655,72 +658,78 @@
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (94); matched lamb, cooked; unrequested specificity penalized (none); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (569); matched lamb; unrequested specificity penalized (none); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/172480"
+      "detailEndpoint": "/food/2705905"
     },
     {
       "manifestIdentifier": "008-salmon-cooked",
       "requestedFood": "salmon cooked",
-      "selectedFdcId": 171999,
-      "selectedDescription": "Fish, salmon, chinook, cooked, dry heat",
-      "dataType": "SR Legacy",
+      "selectedFdcId": 2706285,
+      "selectedDescription": "Fish, salmon, NFS",
+      "dataType": "Survey (FNDDS)",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
-        "query": "fish salmon cooked dry heat",
+        "query": "salmon cooked",
         "allowedDataTypes": [
           "Foundation",
           "SR Legacy",
           "Survey (FNDDS)"
         ],
         "returnedCount": 50,
-        "totalHits": 3206,
+        "totalHits": 2376,
         "topCandidates": [
+          {
+            "fdcId": 2706285,
+            "description": "Fish, salmon, NFS",
+            "dataType": "Survey (FNDDS)",
+            "score": 573,
+            "coverage": 0.5,
+            "conflicts": [],
+            "unrequestedSpecificity": []
+          },
           {
             "fdcId": 171999,
             "description": "Fish, salmon, chinook, cooked, dry heat",
             "dataType": "SR Legacy",
-            "score": 112,
+            "score": 102,
             "coverage": 1,
             "conflicts": [],
-            "unrequestedSpecificity": []
+            "unrequestedSpecificity": [
+              "chinook"
+            ]
           },
           {
             "fdcId": 172000,
             "description": "Fish, salmon, chum, cooked, dry heat",
             "dataType": "SR Legacy",
-            "score": 112,
+            "score": 102,
             "coverage": 1,
             "conflicts": [],
-            "unrequestedSpecificity": []
+            "unrequestedSpecificity": [
+              "chum"
+            ]
           },
           {
             "fdcId": 172001,
             "description": "Fish, salmon, pink, cooked, dry heat",
             "dataType": "SR Legacy",
-            "score": 112,
+            "score": 102,
             "coverage": 1,
             "conflicts": [],
-            "unrequestedSpecificity": []
+            "unrequestedSpecificity": [
+              "pink"
+            ]
           },
           {
             "fdcId": 173692,
             "description": "Fish, salmon, sockeye, cooked, dry heat",
             "dataType": "SR Legacy",
-            "score": 112,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
-            "fdcId": 173716,
-            "description": "Fish, salmon, coho, farmed, cooked, dry heat",
-            "dataType": "SR Legacy",
-            "score": 100,
+            "score": 102,
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": [
-              "farmed"
+              "sockeye"
             ]
           }
         ]
@@ -745,9 +754,9 @@
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (112); matched salmon, cooked; unrequested specificity penalized (none); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (573); matched salmon; unrequested specificity penalized (none); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/171999"
+      "detailEndpoint": "/food/2706285"
     },
     {
       "manifestIdentifier": "009-tuna-canned-water",
@@ -948,9 +957,9 @@
     {
       "manifestIdentifier": "011-cod-cooked",
       "requestedFood": "cod cooked",
-      "selectedFdcId": 175178,
-      "selectedDescription": "Fish, cod, Pacific, cooked",
-      "dataType": "SR Legacy",
+      "selectedFdcId": 2706240,
+      "selectedDescription": "Fish, cod, NFS",
+      "dataType": "Survey (FNDDS)",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
         "query": "cod cooked",
@@ -962,6 +971,15 @@
         "returnedCount": 50,
         "totalHits": 2331,
         "topCandidates": [
+          {
+            "fdcId": 2706240,
+            "description": "Fish, cod, NFS",
+            "dataType": "Survey (FNDDS)",
+            "score": 573,
+            "coverage": 0.5,
+            "conflicts": [],
+            "unrequestedSpecificity": []
+          },
           {
             "fdcId": 175178,
             "description": "Fish, cod, Pacific, cooked",
@@ -996,15 +1014,6 @@
             ]
           },
           {
-            "fdcId": 2706240,
-            "description": "Fish, cod, NFS",
-            "dataType": "Survey (FNDDS)",
-            "score": 73,
-            "coverage": 0.5,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
             "fdcId": 168871,
             "description": "Millet, cooked",
             "dataType": "SR Legacy",
@@ -1031,15 +1040,13 @@
           "processing",
           "added ingredients"
         ],
-        "acceptedUnrequestedSpecificity": [
-          "pacific"
-        ],
+        "acceptedUnrequestedSpecificity": [],
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (106); matched cod, cooked; unrequested specificity penalized (pacific); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (573); matched cod; unrequested specificity penalized (none); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/175178"
+      "detailEndpoint": "/food/2706240"
     },
     {
       "manifestIdentifier": "012-shrimp-cooked",
@@ -1132,9 +1139,9 @@
     {
       "manifestIdentifier": "013-oyster-cooked",
       "requestedFood": "oyster cooked",
-      "selectedFdcId": 174250,
-      "selectedDescription": "Mollusks, oyster, Pacific, cooked, moist heat",
-      "dataType": "SR Legacy",
+      "selectedFdcId": 2706353,
+      "selectedDescription": "Oysters, steamed",
+      "dataType": "Survey (FNDDS)",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
         "query": "oyster cooked",
@@ -1146,6 +1153,15 @@
         "returnedCount": 50,
         "totalHits": 2348,
         "topCandidates": [
+          {
+            "fdcId": 2706353,
+            "description": "Oysters, steamed",
+            "dataType": "Survey (FNDDS)",
+            "score": 548,
+            "coverage": 0.5,
+            "conflicts": [],
+            "unrequestedSpecificity": []
+          },
           {
             "fdcId": 174250,
             "description": "Mollusks, oyster, Pacific, cooked, moist heat",
@@ -1189,15 +1205,6 @@
             "unrequestedSpecificity": [
               "farmed"
             ]
-          },
-          {
-            "fdcId": 171979,
-            "description": "Mollusks, oyster, eastern, cooked, breaded and fried",
-            "dataType": "SR Legacy",
-            "score": 98,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
           }
         ]
       },
@@ -1217,21 +1224,19 @@
           "processing",
           "added ingredients"
         ],
-        "acceptedUnrequestedSpecificity": [
-          "pacific"
-        ],
+        "acceptedUnrequestedSpecificity": [],
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (102); matched oyster, cooked; unrequested specificity penalized (pacific); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (548); matched oyster; unrequested specificity penalized (none); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/174250"
+      "detailEndpoint": "/food/2706353"
     },
     {
       "manifestIdentifier": "014-egg-whole-cooked",
       "requestedFood": "egg whole cooked",
-      "selectedFdcId": 172185,
-      "selectedDescription": "Egg, whole, cooked, omelet",
+      "selectedFdcId": 172186,
+      "selectedDescription": "Egg, whole, cooked, poached",
       "dataType": "SR Legacy",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
@@ -1244,15 +1249,6 @@
         "returnedCount": 50,
         "totalHits": 3512,
         "topCandidates": [
-          {
-            "fdcId": 172185,
-            "description": "Egg, whole, cooked, omelet",
-            "dataType": "SR Legacy",
-            "score": 143,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
           {
             "fdcId": 172186,
             "description": "Egg, whole, cooked, poached",
@@ -1279,6 +1275,17 @@
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": []
+          },
+          {
+            "fdcId": 172185,
+            "description": "Egg, whole, cooked, omelet",
+            "dataType": "SR Legacy",
+            "score": 133,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": [
+              "omelet"
+            ]
           },
           {
             "fdcId": 173423,
@@ -1313,7 +1320,7 @@
       "resolutionStatus": "resolved",
       "reasonForSelection": "Highest deterministic identity score (143); matched egg, whole, cooked; unrequested specificity penalized (none); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/172185"
+      "detailEndpoint": "/food/172186"
     },
     {
       "manifestIdentifier": "015-milk-2-percent",
@@ -1360,15 +1367,6 @@
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 170870,
-            "description": "Milk, reduced fat, fluid, 2% milkfat, with added nonfat milk solids and vitamin A and vitamin D",
-            "dataType": "SR Legacy",
-            "score": 96,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
             "fdcId": 746778,
             "description": "Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D",
             "dataType": "Foundation",
@@ -1376,6 +1374,17 @@
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": []
+          },
+          {
+            "fdcId": 170870,
+            "description": "Milk, reduced fat, fluid, 2% milkfat, with added nonfat milk solids and vitamin A and vitamin D",
+            "dataType": "SR Legacy",
+            "score": 86,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": [
+              "nonfat"
+            ]
           }
         ]
       },
@@ -1406,8 +1415,8 @@
     {
       "manifestIdentifier": "016-yogurt-plain",
       "requestedFood": "yogurt plain",
-      "selectedFdcId": 2647437,
-      "selectedDescription": "Yogurt, plain, nonfat",
+      "selectedFdcId": 2259793,
+      "selectedDescription": "Yogurt, plain, whole milk",
       "dataType": "Foundation",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
@@ -1421,15 +1430,6 @@
         "totalHits": 435,
         "topCandidates": [
           {
-            "fdcId": 2647437,
-            "description": "Yogurt, plain, nonfat",
-            "dataType": "Foundation",
-            "score": 153,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
             "fdcId": 2259793,
             "description": "Yogurt, plain, whole milk",
             "dataType": "Foundation",
@@ -1437,6 +1437,17 @@
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": []
+          },
+          {
+            "fdcId": 2647437,
+            "description": "Yogurt, plain, nonfat",
+            "dataType": "Foundation",
+            "score": 143,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": [
+              "nonfat"
+            ]
           },
           {
             "fdcId": 170886,
@@ -1487,9 +1498,9 @@
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (153); matched yogurt, plain; unrequested specificity penalized (none); preferred data type Foundation; FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (151); matched yogurt, plain; unrequested specificity penalized (none); preferred data type Foundation; FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/2647437"
+      "detailEndpoint": "/food/2259793"
     },
     {
       "manifestIdentifier": "017-cheddar-cheese",
@@ -1527,15 +1538,6 @@
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 171295,
-            "description": "Cheese, cheddar, nonfat or fat free",
-            "dataType": "SR Legacy",
-            "score": 112,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
             "fdcId": 2705709,
             "description": "Cheese, Cheddar",
             "dataType": "Survey (FNDDS)",
@@ -1548,6 +1550,15 @@
             "fdcId": 173414,
             "description": "Cheese, cheddar (Includes foods for USDA's Food Distribution Program)",
             "dataType": "SR Legacy",
+            "score": 106,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": []
+          },
+          {
+            "fdcId": 2705710,
+            "description": "Cheese, Cheddar, reduced fat",
+            "dataType": "Survey (FNDDS)",
             "score": 106,
             "coverage": 1,
             "conflicts": [],
@@ -1582,9 +1593,9 @@
     {
       "manifestIdentifier": "018-cottage-cheese",
       "requestedFood": "cottage cheese",
-      "selectedFdcId": 2346384,
-      "selectedDescription": "Cottage cheese, full fat, large or small curd",
-      "dataType": "Foundation",
+      "selectedFdcId": 2705747,
+      "selectedDescription": "Cheese, cottage, NFS",
+      "dataType": "Survey (FNDDS)",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
         "query": "cottage cheese",
@@ -1597,13 +1608,24 @@
         "totalHits": 1087,
         "topCandidates": [
           {
-            "fdcId": 2346384,
-            "description": "Cottage cheese, full fat, large or small curd",
-            "dataType": "Foundation",
-            "score": 143,
+            "fdcId": 2705747,
+            "description": "Cheese, cottage, NFS",
+            "dataType": "Survey (FNDDS)",
+            "score": 623,
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": []
+          },
+          {
+            "fdcId": 2346384,
+            "description": "Cottage cheese, full fat, large or small curd",
+            "dataType": "Foundation",
+            "score": 133,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": [
+              "full"
+            ]
           },
           {
             "fdcId": 2705749,
@@ -1626,15 +1648,6 @@
           {
             "fdcId": 2705779,
             "description": "Cheese, cottage cheese, with gelatin dessert and fruit",
-            "dataType": "Survey (FNDDS)",
-            "score": 125,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
-            "fdcId": 2705780,
-            "description": "Cheese, cottage cheese, with gelatin dessert and vegetables",
             "dataType": "Survey (FNDDS)",
             "score": 125,
             "coverage": 1,
@@ -1663,9 +1676,9 @@
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (143); matched cottage, cheese; unrequested specificity penalized (none); preferred data type Foundation; FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (623); matched cottage, cheese; unrequested specificity penalized (none); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/2346384"
+      "detailEndpoint": "/food/2705747"
     },
     {
       "manifestIdentifier": "019-tofu-firm",
@@ -1688,7 +1701,7 @@
             "fdcId": 172448,
             "description": "Tofu, firm, prepared with calcium sulfate and magnesium chloride (nigari)",
             "dataType": "SR Legacy",
-            "score": 129,
+            "score": 607,
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": []
@@ -1751,7 +1764,7 @@
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (129); matched tofu, firm; unrequested specificity penalized (none); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (607); matched tofu, firm; unrequested specificity penalized (none); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
       "detailEndpoint": "/food/172448"
     },
@@ -2296,8 +2309,8 @@
     {
       "manifestIdentifier": "026-peas-cooked",
       "requestedFood": "peas cooked",
-      "selectedFdcId": 2709958,
-      "selectedDescription": "Green peas, cooked, from restaurant",
+      "selectedFdcId": 2709962,
+      "selectedDescription": "Green peas, NS as to form, cooked",
       "dataType": "Survey (FNDDS)",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
@@ -2311,6 +2324,17 @@
         "totalHits": 2840,
         "topCandidates": [
           {
+            "fdcId": 2709962,
+            "description": "Green peas, NS as to form, cooked",
+            "dataType": "Survey (FNDDS)",
+            "score": 605,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": [
+              "green"
+            ]
+          },
+          {
             "fdcId": 2709958,
             "description": "Green peas, cooked, from restaurant",
             "dataType": "Survey (FNDDS)",
@@ -2319,17 +2343,6 @@
             "conflicts": [],
             "unrequestedSpecificity": [
               "restaurant",
-              "green"
-            ]
-          },
-          {
-            "fdcId": 2709962,
-            "description": "Green peas, NS as to form, cooked",
-            "dataType": "Survey (FNDDS)",
-            "score": 105,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": [
               "green"
             ]
           },
@@ -2385,15 +2398,14 @@
           "added ingredients"
         ],
         "acceptedUnrequestedSpecificity": [
-          "restaurant",
           "green"
         ],
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (109); matched pea, cooked; unrequested specificity penalized (restaurant, green); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (605); matched pea, cooked; unrequested specificity penalized (green); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/2709958"
+      "detailEndpoint": "/food/2709962"
     },
     {
       "manifestIdentifier": "027-edamame-cooked",
@@ -3524,17 +3536,17 @@
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 2710788,
-            "description": "Rice, white, cooked, as ingredient",
+            "fdcId": 2708405,
+            "description": "Rice, white, cooked, made with butter",
             "dataType": "Survey (FNDDS)",
-            "score": 131,
+            "score": 129,
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 2708405,
-            "description": "Rice, white, cooked, made with butter",
+            "fdcId": 2708406,
+            "description": "Rice, white, cooked, made with margarine",
             "dataType": "Survey (FNDDS)",
             "score": 129,
             "coverage": 1,
@@ -3603,15 +3615,6 @@
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 2710789,
-            "description": "Rice, brown, cooked, as ingredient",
-            "dataType": "Survey (FNDDS)",
-            "score": 131,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
             "fdcId": 2708411,
             "description": "Rice, brown, cooked, made with butter",
             "dataType": "Survey (FNDDS)",
@@ -3623,6 +3626,15 @@
           {
             "fdcId": 2708412,
             "description": "Rice, brown, cooked, made with margarine",
+            "dataType": "Survey (FNDDS)",
+            "score": 129,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": []
+          },
+          {
+            "fdcId": 2708414,
+            "description": "Rice, brown, cooked, no added fat",
             "dataType": "Survey (FNDDS)",
             "score": 129,
             "coverage": 1,
@@ -4480,8 +4492,8 @@
     {
       "manifestIdentifier": "050-broccoli-cooked",
       "requestedFood": "broccoli cooked",
-      "selectedFdcId": 2710792,
-      "selectedDescription": "Broccoli, cooked, as ingredient",
+      "selectedFdcId": 2709644,
+      "selectedDescription": "Broccoli, cooked, from restaurant",
       "dataType": "Survey (FNDDS)",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
@@ -4495,15 +4507,6 @@
         "totalHits": 2544,
         "topCandidates": [
           {
-            "fdcId": 2710792,
-            "description": "Broccoli, cooked, as ingredient",
-            "dataType": "Survey (FNDDS)",
-            "score": 131,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
             "fdcId": 2709644,
             "description": "Broccoli, cooked, from restaurant",
             "dataType": "Survey (FNDDS)",
@@ -4512,6 +4515,17 @@
             "conflicts": [],
             "unrequestedSpecificity": [
               "restaurant"
+            ]
+          },
+          {
+            "fdcId": 2710792,
+            "description": "Broccoli, cooked, as ingredient",
+            "dataType": "Survey (FNDDS)",
+            "score": 121,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": [
+              "ingredient"
             ]
           },
           {
@@ -4559,13 +4573,15 @@
           "processing",
           "added ingredients"
         ],
-        "acceptedUnrequestedSpecificity": [],
+        "acceptedUnrequestedSpecificity": [
+          "restaurant"
+        ],
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (131); matched broccoli, cooked; unrequested specificity penalized (none); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (121); matched broccoli, cooked; unrequested specificity penalized (restaurant); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/2710792"
+      "detailEndpoint": "/food/2709644"
     },
     {
       "manifestIdentifier": "051-cauliflower-cooked",
@@ -4588,10 +4604,12 @@
             "fdcId": 2710801,
             "description": "Cauliflower, cooked, as ingredient",
             "dataType": "Survey (FNDDS)",
-            "score": 131,
+            "score": 121,
             "coverage": 1,
             "conflicts": [],
-            "unrequestedSpecificity": []
+            "unrequestedSpecificity": [
+              "ingredient"
+            ]
           },
           {
             "fdcId": 2709899,
@@ -4651,11 +4669,13 @@
           "processing",
           "added ingredients"
         ],
-        "acceptedUnrequestedSpecificity": [],
+        "acceptedUnrequestedSpecificity": [
+          "ingredient"
+        ],
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (131); matched cauliflower, cooked; unrequested specificity penalized (none); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (121); matched cauliflower, cooked; unrequested specificity penalized (ingredient); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
       "detailEndpoint": "/food/2710801"
     },
@@ -4680,10 +4700,12 @@
             "fdcId": 2710800,
             "description": "Cabbage, cooked, as ingredient",
             "dataType": "Survey (FNDDS)",
-            "score": 131,
+            "score": 121,
             "coverage": 1,
             "conflicts": [],
-            "unrequestedSpecificity": []
+            "unrequestedSpecificity": [
+              "ingredient"
+            ]
           },
           {
             "fdcId": 168572,
@@ -4741,11 +4763,13 @@
           "processing",
           "added ingredients"
         ],
-        "acceptedUnrequestedSpecificity": [],
+        "acceptedUnrequestedSpecificity": [
+          "ingredient"
+        ],
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (131); matched cabbage, cooked; unrequested specificity penalized (none); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (121); matched cabbage, cooked; unrequested specificity penalized (ingredient); preferred data type Survey (FNDDS); FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
       "detailEndpoint": "/food/2710800"
     },
@@ -5266,15 +5290,6 @@
             "unrequestedSpecificity": []
           },
           {
-            "fdcId": 2710797,
-            "description": "Mushrooms, cooked, as ingredient",
-            "dataType": "Survey (FNDDS)",
-            "score": 106,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
-          {
             "fdcId": 168437,
             "description": "Mushrooms, shiitake, cooked, without salt",
             "dataType": "SR Legacy",
@@ -5284,6 +5299,15 @@
             "unrequestedSpecificity": [
               "shiitake"
             ]
+          },
+          {
+            "fdcId": 2709943,
+            "description": "Mushroom, Asian, cooked, from dried",
+            "dataType": "Survey (FNDDS)",
+            "score": 104,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": []
           }
         ]
       },
@@ -7851,29 +7875,20 @@
     {
       "manifestIdentifier": "087-coffee-brewed",
       "requestedFood": "coffee brewed",
-      "selectedFdcId": 171881,
-      "selectedDescription": "Beverages, coffee, brewed, breakfast blend",
+      "selectedFdcId": 171890,
+      "selectedDescription": "Beverages, coffee, brewed, prepared with tap water",
       "dataType": "SR Legacy",
       "matchSearchInformation": {
         "endpoint": "/foods/search",
-        "query": "coffee brewed NFS",
+        "query": "coffee brewed",
         "allowedDataTypes": [
           "Foundation",
           "SR Legacy",
           "Survey (FNDDS)"
         ],
         "returnedCount": 50,
-        "totalHits": 635,
+        "totalHits": 192,
         "topCandidates": [
-          {
-            "fdcId": 171881,
-            "description": "Beverages, coffee, brewed, breakfast blend",
-            "dataType": "SR Legacy",
-            "score": 139,
-            "coverage": 1,
-            "conflicts": [],
-            "unrequestedSpecificity": []
-          },
           {
             "fdcId": 171890,
             "description": "Beverages, coffee, brewed, prepared with tap water",
@@ -7888,6 +7903,15 @@
             "description": "Coffee, brewed",
             "dataType": "Survey (FNDDS)",
             "score": 135,
+            "coverage": 1,
+            "conflicts": [],
+            "unrequestedSpecificity": []
+          },
+          {
+            "fdcId": 171889,
+            "description": "Beverages, coffee, brewed, prepared with tap water, decaffeinated",
+            "dataType": "SR Legacy",
+            "score": 133,
             "coverage": 1,
             "conflicts": [],
             "unrequestedSpecificity": []
@@ -7932,9 +7956,9 @@
         "rationale": "Candidate passed deterministic conflict and identity gates; remaining descriptive detail identifies the USDA analytical record rather than changing the requested food identity."
       },
       "resolutionStatus": "resolved",
-      "reasonForSelection": "Highest deterministic identity score (139); matched coffee, brewed; unrequested specificity penalized (none); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
+      "reasonForSelection": "Highest deterministic identity score (135); matched coffee, brewed; unrequested specificity penalized (none); preferred data type SR Legacy; FDC ID used as final tie-breaker.",
       "unresolvedReason": null,
-      "detailEndpoint": "/food/171881"
+      "detailEndpoint": "/food/171890"
     }
   ]
 }

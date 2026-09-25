@@ -7,7 +7,7 @@ This MVP is deployable to any Node 22+ host; it is not a Next.js application bec
 3. Start with `npm start`. The process serves `dist/public` and honors `PORT`.
 4. Configure a health check for `/`.
 
-Supabase is optional. If persistence is added, configure only `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in host settings and apply **both** migrations, in timestamp order, separately. Do not configure a service-role secret for this public app. The `.env.example` file lists every supported environment variable without secrets.
+Supabase is optional. If persistence is added, configure only `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in host settings and apply all migrations in timestamp order. Do not configure a service-role secret for this public app. The `.env.example` file lists every supported environment variable without secrets. The checked-in 87-food canonical JSON is the production food-data authority; regeneration uses `USDA_FDC_API_KEY` only in the importer process environment.
 
 ## Supabase migration and rollback
 
