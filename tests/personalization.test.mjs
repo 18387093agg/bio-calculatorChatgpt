@@ -126,3 +126,25 @@ test('Crohn/UC combinations retain distinct qualitative provenance without doubl
   assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));
  }
 });
+
+test('PEI is documented, digestion-stage qualitative, and PERT does not imply numerical restoration',()=>{
+ const entries=[{nutrientKey:'vitamin_a',formId:'vitamin_a',origin:'animal',amount:100,unit:'µg'},{nutrientKey:'vitamin_d',formId:'vitamin_d3',origin:'animal',amount:10,unit:'µg'},{nutrientKey:'zinc',formId:'zinc',origin:'plant',amount:4,unit:'mg'}],targets={vitamin_a:{rda:900,unit:'µg'}};
+ const baseline=runNutrientPipeline(entries,{},targets);
+ for(const state of ['documented_without_pert','documented_with_pert']){const result=runNutrientPipeline(entries,{conditions:[{id:'pancreatic_exocrine_insufficiency',state}]},targets);assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.equal(result.find(x=>x.nutrientKey==='vitamin_a').conditionEffects[0].quantitative,false);assert.equal(result.find(x=>x.nutrientKey==='vitamin_a').targetComparison.target.rda,900)}
+ const untreated=resolveConditionEffects([{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'}]);assert.equal(untreated[0].stage,'digestion');assert.ok(untreated.some(x=>x.mechanismId==='pei.exocrine-fat-digestion'));
+ const pert=resolveConditionEffects([{id:'pancreatic_exocrine_insufficiency',state:'documented_with_pert'}]);assert.ok(pert.some(x=>x.mechanismId==='pei.pert-clinical-context'));assert.ok(pert.every(x=>x.quantitative===false));
+});
+
+test('bariatric procedures are independent qualitative models and suppress overlapping acid provenance',()=>{
+ const entries=[{nutrientKey:'iron',formId:'iron_nonheme',origin:'plant',amount:10,unit:'mg'},{nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},{nutrientKey:'vitamin_a',formId:'vitamin_a',origin:'animal',amount:100,unit:'µg'}],targets={iron:{rda:8,unit:'mg'}};
+ const baseline=runNutrientPipeline(entries,{},targets);
+ for(const state of ['rygb','sleeve_gastrectomy','bpd_ds']){const result=runNutrientPipeline(entries,{conditions:[{id:'bariatric_bypass',state}]},targets);assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.equal(result.find(x=>x.nutrientKey==='iron').targetComparison.target.rda,8);assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false))}
+ const rygb=resolveConditionEffects([{id:'bariatric_bypass',state:'rygb'}]),sg=resolveConditionEffects([{id:'bariatric_bypass',state:'sleeve_gastrectomy'}]),ds=resolveConditionEffects([{id:'bariatric_bypass',state:'bpd_ds'}]);
+ assert.ok(rygb.some(x=>x.mechanismId==='rygb.iron-gastric-duodenal-handling'));assert.ok(sg.some(x=>x.mechanismId==='sg.iron-gastric-processing'));assert.ok(ds.some(x=>x.mechanismId==='bpd_ds.fat-digestion-and-absorption'));assert.ok(!ds.some(x=>x.mechanismId.startsWith('rygb.')));
+ for(const surgery of ['rygb','sleeve_gastrectomy']){const both=runNutrientPipeline(entries,{conditions:[{id:'hypochlorhydria',state:'documented'},{id:'bariatric_bypass',state:surgery}]});assert.deepEqual(both.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.ok(!both.find(x=>x.nutrientKey==='iron').conditionEffects.some(x=>x.mechanismId==='gastric-acid.nonheme-solubilization'))}
+});
+
+test('new-condition combinations retain qualitative provenance without multiplication',()=>{
+ const entries=[{nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},{nutrientKey:'vitamin_a',formId:'vitamin_a',origin:'animal',amount:100,unit:'µg'}],baseline=runNutrientPipeline(entries,{});
+ for(const conditions of [[{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'},{id:'celiac_disease',state:'active_untreated'}],[{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'},{id:'crohn_disease',state:'active_ileal'}],[{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'},{id:'ulcerative_colitis',state:'active'}],[{id:'bariatric_bypass',state:'rygb'},{id:'celiac_disease',state:'active_untreated'}],[{id:'bariatric_bypass',state:'sleeve_gastrectomy'},{id:'celiac_disease',state:'active_untreated'}],[{id:'bariatric_bypass',state:'bpd_ds'},{id:'celiac_disease',state:'active_untreated'}]]){const result=runNutrientPipeline(entries,{conditions});assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));for(const nutrient of result)assert.equal(new Set(nutrient.conditionEffects.map(x=>x.mechanismId)).size,nutrient.conditionEffects.length)}
+});
