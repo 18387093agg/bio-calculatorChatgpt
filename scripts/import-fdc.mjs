@@ -84,9 +84,12 @@ const conflictPairs = [['raw', ['cooked', 'roasted', 'boiled', 'baked']], ['cook
 // an unspecified poultry breast into meat-and-skin.
 const specificityAttributes = [
   'ground', 'patty', 'patties', 'crumbles', 'loaf', 'skin', 'skinless', 'boneless',
+  'nugget', 'nuggets', 'brain', 'heart', 'kidney', 'liver', 'lung', 'pancreas', 'spleen', 'tongue',
   'drained', 'undrained', 'frozen', 'sprouted', 'bran', 'restaurant', 'commercial',
+  'omelet', 'nonfat', 'full', 'ingredient',
   'salted', 'unsalted', 'enriched', 'unenriched', 'fortified', 'sweetened',
   'atlantic', 'pacific', 'wild', 'farmed', 'shiitake', 'portabella', 'cremini',
+  'chinook', 'chum', 'pink', 'sockeye', 'coho', 'choice', 'breakfast', 'australian', 'imported',
   'grape', 'red', 'yellow', 'green', 'white', 'new', 'zealand', 'medjool', 'english'
 ];
 const methodAttributes = ['roasted', 'boiled', 'baked', 'braised', 'broiled', 'pan', 'fried', 'steamed', 'stir'];
@@ -121,9 +124,15 @@ const requiredIdentity = new Map([
   ['raisins', /^raisins\b/], ['olive oil', /^(oil olive|olive oil)\b/],
   ['butter', /^butter\b/],
   ['pork loin cooked', /separable lean and fat/],
-  ['lamb cooked', /composite.*separable lean and fat/],
   ['walnuts', /^walnuts excluding honey roasted$/],
   ['tomato raw', /^tomatoes raw$/], ['dates', /^date$/], ['raisins', /^raisins$/]
+]);
+// Reviewed generic/NFS records resolve requests for which token scoring would
+// otherwise prefer a materially narrower species, cut, organ, brand, or recipe.
+const reviewedGenericFdcIds = new Map([
+  ['lamb cooked', 2705905], ['salmon cooked', 2706285], ['cod cooked', 2706240],
+  ['oyster cooked', 2706353], ['cottage cheese', 2705747], ['peas cooked', 2709962],
+  ['tofu firm', 172448]
 ]);
 function rankCandidate(requested, food) {
   const requestedTokens = tokens(requested), description = normalize(food.description), descriptionTokens = new Set(tokens(description));
@@ -138,17 +147,19 @@ function rankCandidate(requested, food) {
   // "Cooked" alone deliberately does not authorize an arbitrary cooking method.
   const methodPenalty = requestedTokens.includes('cooked') && !requestedMethod ? extraMethods.length * 12 : extraMethods.length * 5;
   const percentagePenalty = /\b\d+(?:\.\d+)?\s*%\b/.test(description) && !requestedTokens.includes('%') ? 24 : 0;
-  const addedIngredientPenalty = /\b(with|added)\s+(salt|sugar|oil|vitamin|flavor)/.test(description) && !/\bwith\b/.test(normalize(requested)) ? 22 : 0;
+  const addedIngredientPenalty = /\b(with|added|prepared with)\s+(salt|sugar|oil|vitamin|flavor|calcium|magnesium)/.test(description) && !/\bwith\b/.test(normalize(requested)) ? 22 : 0;
   const extraTokenCount = Math.max(0, descriptionTokens.size - new Set(requestedTokens).size);
   const genericBonus = /\b(nfs|ns as to|not specified|unspecified)\b/.test(description) ? 15 : 0;
   const coverage = matched.length / requestedTokens.length;
-  const score = Math.round(coverage * 100 + (description.includes(normalize(requested)) ? 25 : 0) + (preferredType.get(food.dataType) ?? 0) + genericBonus - conflicts.length * 200 - extraSpecificity.length * 10 - extraTokenCount * 2 - methodPenalty - percentagePenalty - addedIngredientPenalty);
+  const reviewedGenericBonus = reviewedGenericFdcIds.get(normalize(requested)) === food.fdcId ? 500 : 0;
+  const score = Math.round(coverage * 100 + (description.includes(normalize(requested)) ? 25 : 0) + (preferredType.get(food.dataType) ?? 0) + genericBonus + reviewedGenericBonus - conflicts.length * 200 - extraSpecificity.length * 10 - extraTokenCount * 2 - methodPenalty - percentagePenalty - addedIngredientPenalty);
   return { food, score, coverage, matched, missing, conflicts, extraSpecificity, extraMethods };
 }
 function selectCandidate(requested, candidates, usedIds) {
   const ranked = candidates.filter(food => Number.isInteger(food.fdcId) && DATA_TYPES.includes(food.dataType) && !usedIds.has(food.fdcId)).map(food => rankCandidate(requested, food)).sort((a, b) => b.score - a.score || b.coverage - a.coverage || a.food.fdcId - b.food.fdcId);
   const selected = ranked.find(candidate => !candidate.conflicts.length);
-  if (!selected || selected.coverage < 0.67 || selected.conflicts.length) return { selected: null, ranked, reason: selected ? `Best result failed identity criteria (coverage ${selected.coverage.toFixed(2)}, conflicts: ${selected.conflicts.join(', ') || 'none'}).` : 'Search returned no unused result with an allowed USDA data type.' };
+  const reviewedGeneric = selected && reviewedGenericFdcIds.get(normalize(requested)) === selected.food.fdcId;
+  if (!selected || (selected.coverage < 0.67 && !reviewedGeneric) || selected.conflicts.length) return { selected: null, ranked, reason: selected ? `Best result failed identity criteria (coverage ${selected.coverage.toFixed(2)}, conflicts: ${selected.conflicts.join(', ') || 'none'}).` : 'Search returned no unused result with an allowed USDA data type.' };
   return { selected, ranked, reason: `Highest deterministic identity score (${selected.score}); matched ${selected.matched.join(', ')}; unrequested specificity penalized (${selected.extraSpecificity.join(', ') || 'none'}); preferred data type ${selected.food.dataType}; FDC ID used as final tie-breaker.` };
 }
 function identityAudit(requested, ranked) {
@@ -167,8 +178,8 @@ const searchQueries = new Map(Object.entries({
   'milk 2 percent': 'milk reduced fat fluid 2 percent',
   'chicken breast roasted': 'chicken breast meat only cooked roasted',
   'pork loin cooked': 'pork loin separable lean and fat cooked',
-  'lamb cooked': 'lamb cooked composite lean and fat',
-  'salmon cooked': 'fish salmon cooked dry heat',
+  'lamb cooked': 'lamb cooked',
+  'salmon cooked': 'salmon cooked',
   'cheddar cheese': 'cheese cheddar',
   'peas cooked': 'green peas cooked',
   'walnuts': 'walnuts excluding honey roasted',
@@ -185,14 +196,14 @@ const searchQueries = new Map(Object.entries({
   'raisins': 'raisins',
   'olive oil': 'oil olive salad or cooking',
   'butter': 'butter',
-  'coffee brewed': 'coffee brewed NFS',
+  'coffee brewed': 'coffee brewed',
   'sunflower seeds': 'seeds sunflower seed kernels'
 }));
 function canonicalFood(record) {
   if (!Number.isInteger(record.fdcId) || !record.description || !record.dataType || !Array.isArray(record.foodNutrients)) throw new Error('Food-detail response is missing fdcId, description, dataType, or foodNutrients.');
   const fdcNutrients = record.foodNutrients.map(entry => ({ nutrientId: entry.nutrient?.id ?? entry.nutrientId ?? null, nutrientNumber: entry.nutrient?.number ?? null, nutrientName: entry.nutrient?.name ?? entry.nutrientName ?? null, unit: unit(entry.nutrient?.unitName ?? entry.unitName), amount: entry.amount, dataPoints: entry.dataPoints ?? null, derivationCode: entry.foodNutrientDerivation?.code ?? null, derivationDescription: entry.foodNutrientDerivation?.description ?? null })).filter(entry => Number.isInteger(entry.nutrientId) && entry.nutrientName && entry.unit && Number.isFinite(entry.amount));
   if (!fdcNutrients.length) throw new Error(`FDC ${record.fdcId} contains no valid nutrient values.`);
-  const mapped = new Map([[1008, 'energy'], [1003, 'protein'], [1004, 'fat'], [1005, 'carbohydrate'], [1079, 'fiber'], [1087, 'calcium'], [1089, 'iron_total'], [1092, 'potassium'], [1095, 'zinc'], [1162, 'vitamin_c'], [1165, 'thiamine'], [1178, 'vitamin_b12_food']]);
+  const mapped = new Map([[1008, 'energy'], [2047, 'energy'], [2048, 'energy'], [1003, 'protein'], [1004, 'fat'], [1005, 'carbohydrate'], [1079, 'fiber'], [1087, 'calcium'], [1089, 'iron_total'], [1092, 'potassium'], [1095, 'zinc'], [1162, 'vitamin_c'], [1165, 'thiamine'], [1178, 'vitamin_b12_food']]);
   const nutrients = {}, provenance = {};
   for (const item of fdcNutrients) if (mapped.has(item.nutrientId)) { const key = mapped.get(item.nutrientId); nutrients[key] = item.amount; provenance[key] = { source: 'USDA FoodData Central', evidenceId: `fdc:${record.fdcId}`, fdcNutrientId: item.nutrientId, nutrientName: item.nutrientName, unit: item.unit, amountPer100g: item.amount }; }
   const basis = preparation(record.description);
