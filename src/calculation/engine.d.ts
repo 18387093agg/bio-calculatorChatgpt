@@ -1,0 +1,6 @@
+export interface CanonicalEntry{nutrientKey:string;formId:string;origin:string;foodBound?:boolean;amount:number;unit:string;food?:string;preparation?:string}
+export function estimateFormAbsorption(key:string,origin:string,foodBound:boolean,amount:number,gastricAcid?:string):{min:number;max:number;unit:string;modelKey:string;assumption:string}|null;
+export function calculateCanonical(entries:CanonicalEntry[],context?:{gastricAcid:string}):Array<{nutrientKey:string;unit:string;gross:number;sources:Record<string,number>;forms:Record<string,number>;contributions:CanonicalEntry[];absorbed:null|{min:number;max:number;unit:string;status:string;modelKeys:string[]};unavailableReasons:string[]}>;
+export function normalizePortion(amountPer100g:number,grams:number,preparation?:null|{yield?:{min:number;max:number;evidenceId:string};retention?:{min:number;max:number;evidenceId:string}}):{amount:number;yieldFactor:number|null;retentionFactor:number|null;evidenceIds:string[];reason:string|null};
+export function thiamineTarget(energyKcal:number):{min:number;max:number;modelKey:string};
+export function progressScale(actual:number,target:Record<string,unknown>):{scale:number;actual:number;markers:Record<string,number>};

@@ -4,6 +4,53 @@
     "url": "https://fdc.nal.usda.gov/",
     "note": "Development reference values per 100 g edible portion. Verify and expand before clinical or production use."
   },
+  "nutrientForms": {
+    "iron_heme": {
+      "nutrientKey": "iron",
+      "origin": "animal",
+      "label": "Heme iron"
+    },
+    "iron_nonheme": {
+      "nutrientKey": "iron",
+      "origin": "plant",
+      "label": "Non-heme iron"
+    },
+    "vitamin_b12_food": {
+      "nutrientKey": "vitamin_b12",
+      "origin": "animal",
+      "label": "Food-bound B12"
+    },
+    "vitamin_b12_free": {
+      "nutrientKey": "vitamin_b12",
+      "origin": "supplement",
+      "label": "Free/crystalline B12"
+    },
+    "vitamin_c": {
+      "nutrientKey": "vitamin_c",
+      "origin": "plant",
+      "label": "Vitamin C"
+    },
+    "calcium": {
+      "nutrientKey": "calcium",
+      "origin": "animal",
+      "label": "Calcium"
+    },
+    "thiamine": {
+      "nutrientKey": "thiamine",
+      "origin": "plant",
+      "label": "Thiamine"
+    },
+    "zinc": {
+      "nutrientKey": "zinc",
+      "origin": "animal",
+      "label": "Zinc"
+    },
+    "potassium": {
+      "nutrientKey": "potassium",
+      "origin": "plant",
+      "label": "Potassium"
+    }
+  },
   "foods": [
     {
       "id": "beef",
@@ -187,14 +234,34 @@
       "unit": "mg",
       "category": "Minerals",
       "model": "ABSORPTION_MODELED",
-      "explanation": "Heme and non-heme contributions remain distinct. The displayed absorption range is a meal-level estimate, not a personal measurement."
+      "explanation": "Heme and non-heme contributions remain distinct. The displayed absorption range is a meal-level estimate, not a personal measurement.",
+      "referenceSystem": "US National Academies DRI",
+      "population": "Adults; demo values use the male 19–50 reference where sex-specific",
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "male",
+      "ageMin": 19,
+      "ageMax": 50,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "vitamin_b12": {
       "rda": 2.4,
-      "unit": "\u00b5g",
+      "unit": "µg",
       "category": "Vitamins",
       "model": "ABSORPTION_MODELED",
-      "explanation": "Food-bound B12 is represented separately from supplemental/free forms. Individual gastric and intrinsic-factor status are not inferred."
+      "explanation": "Food-bound B12 is represented separately from supplemental/free forms. Individual gastric and intrinsic-factor status are not inferred.",
+      "referenceSystem": "US National Academies DRI",
+      "population": "Adults; demo values use the male 19–50 reference where sex-specific",
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "all",
+      "ageMin": 19,
+      "ageMax": null,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "calcium": {
       "rda": 1000,
@@ -202,16 +269,35 @@
       "unit": "mg",
       "category": "Minerals",
       "model": "GROSS_ONLY",
-      "explanation": "Quantitative absorption is not modeled."
+      "explanation": "Quantitative absorption is not modeled.",
+      "referenceSystem": "US National Academies DRI",
+      "population": "Adults; demo values use the male 19–50 reference where sex-specific",
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "all",
+      "ageMin": 19,
+      "ageMax": 50,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "thiamine": {
       "rda": 1.2,
-      "optimalMin": 1.5,
-      "optimalMax": 1.7,
       "unit": "mg",
       "category": "Vitamins",
       "model": "GROSS_ONLY",
-      "explanation": "Optimal range is a 2,500 kcal model assumption and does not replace the RDA."
+      "explanation": "Optimal range is a 2,500 kcal model assumption and does not replace the RDA.",
+      "referenceSystem": "US National Academies DRI",
+      "population": "Adults; demo values use the male 19–50 reference where sex-specific",
+      "evidenceId": "nasem-dri",
+      "projectModelKey": "thiamine.energy.optimization.v1",
+      "jurisdiction": "United States and Canada",
+      "sex": "male",
+      "ageMin": 19,
+      "ageMax": null,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "vitamin_c": {
       "rda": 90,
@@ -219,7 +305,17 @@
       "unit": "mg",
       "category": "Vitamins",
       "model": "GROSS_ONLY",
-      "explanation": "Preparation retention is represented when a documented local demo rule exists."
+      "explanation": "Preparation retention is represented when a documented local demo rule exists.",
+      "referenceSystem": "US National Academies DRI",
+      "population": "Adults; demo values use the male 19–50 reference where sex-specific",
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "male",
+      "ageMin": 19,
+      "ageMax": null,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "zinc": {
       "rda": 11,
@@ -227,7 +323,17 @@
       "unit": "mg",
       "category": "Trace elements",
       "model": "GROSS_ONLY",
-      "explanation": "Quantitative absorption is not modeled."
+      "explanation": "Quantitative absorption is not modeled.",
+      "referenceSystem": "US National Academies DRI",
+      "population": "Adults; demo values use the male 19–50 reference where sex-specific",
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "male",
+      "ageMin": 19,
+      "ageMax": null,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     }
   }
 }

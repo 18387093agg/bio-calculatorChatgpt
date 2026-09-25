@@ -1,7 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { absorptionEstimate, progress } from '../public/application/meal-service.js';
+import { absorptionEstimate, calculateMeal as calculateBrowserMeal, estimateFormAbsorption, progress } from '../public/application/meal-service.js';
+import { calculateMeal as calculateDomainMeal } from '../.test-dist/src/calculation/meal.js';
+import { calculateNutrientPipeline } from '../.test-dist/src/calculation/pipeline/meal-pipeline.js';
 import { createWorkspaceRepository } from '../public/application/repository.js';
+import { translateMarkup } from '../public/i18n/messages.js';
 
 test('source-aware frontend iron estimate does not apply the acid penalty to heme iron', () => {
   const value = { animal: 2, plant: 3, supplement: 0 };
@@ -41,3 +44,6 @@ test('local workspace repository restores persisted user workspace', () => {
   const restored = createWorkspaceRepository(storage).load();
   assert.equal(restored.meal[0].id, 'meal-1'); assert.equal(restored.settings.language, 'el');
 });
+test('browser-visible and TypeScript domain results use the same canonical equation',()=>{const canonical=estimateFormAbsorption('iron','plant',false,3,'low');const food={id:'x',name:'x',category:'x',nutrients:[{form:{id:'nonheme',nutrientKey:'iron',label:'Non-heme',origin:'plant'},amountPer100g:3,unit:'mg'}]};const domain=calculateDomainMeal([{food,grams:100}],{gastricAcid:'low'})[0].absorbed;assert.deepEqual({min:domain.min,max:domain.max},{min:canonical.min,max:canonical.max});});
+test('Greek localization covers major interactive controls',()=>{const html=translateMarkup('Food Quantity Preparation Clear meal Actual intake Details Save supplement Save result Save settings','el');for(const word of ['Τρόφιμο','Ποσότητα','Παρασκευή','Καθαρισμός','Πραγματική','Λεπτομέρειες','Αποθήκευση'])assert.ok(html.includes(word));});
+test('browser adapter, domain result, and pipeline agree exactly',()=>{const food={id:'x',name:'x',category:'x',nutrients:{iron_nonheme:3}},forms={iron_nonheme:{nutrientKey:'iron',origin:'plant'}},domainFood={id:'x',name:'x',category:'x',nutrients:[{form:{id:'iron_nonheme',nutrientKey:'iron',label:'Non-heme',origin:'plant'},amountPer100g:3,unit:'mg'}]};const browser=calculateBrowserMeal([{id:'1',food,grams:100,preparation:'raw'}],forms,{gastricAcid:'low'}).nutrients.iron;const domain=calculateDomainMeal([{food:domainFood,grams:100}],{gastricAcid:'low'})[0];const pipeline=calculateNutrientPipeline([{food:domainFood,grams:100}],{gastricAcid:'low'})[0];assert.equal(browser.total,domain.gross.value);assert.deepEqual(browser.absorbed,{min:domain.absorbed.min,max:domain.absorbed.max,unit:domain.absorbed.unit,status:'modeled',modelKeys:domain.absorbed.evidenceIds});assert.deepEqual({min:pipeline.absorbed.min,max:pipeline.absorbed.max},{min:domain.absorbed.min,max:domain.absorbed.max})});
