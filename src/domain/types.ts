@@ -10,4 +10,5 @@ export interface Food { id: string; name: string; category: string; nutrients: F
 export interface MealItem { food: Food; grams: number; preparation?: Preparation; }
 export interface Preparation { method: string; yieldMin: number; yieldMax: number; retention: Record<string, { min: number; max: number; evidenceId: string }>; }
 export interface ClinicalContext { gastricAcid: GastricAcid; }
-export interface TargetSet { rda?: number; ai?: number; pri?: number; ear?: number; optimalMin?: number; optimalMax?: number; ul?: number; unit: string; assumptions: string[]; }
+/** Official references, project model targets, and personal overrides are intentionally distinct. */
+export interface TargetSet { rda?: number; ai?: number; pri?: number; ear?: number; ar?: number; optimalMin?: number; optimalMax?: number; ul?: number; userOptimalMin?: number; userOptimalMax?: number; unit: string; assumptions: string[]; }
