@@ -7,3 +7,8 @@ test('personalization UI exposes state-aware hypochlorhydria and celiac limitati
 
 test('personalization UI exposes Crohn anatomical state and UC activity state',()=>{for(const phrase of ['crohn-state','ulcerative-colitis-state','Active disease with ileal involvement','Remission without reported ileal involvement','Ulcerative colitis state'])assert.ok(app.includes(phrase),phrase);});
 test('personalization UI exposes documented PEI, PERT boundary, and procedure-specific bariatric choices',()=>{for(const phrase of ['pei-state','Documented PEI','enzyme replacement context','bariatric-surgery-state','Roux-en-Y gastric bypass (RYGB)','Sleeve gastrectomy (SG)','Biliopancreatic diversion / duodenal switch (BPD/DS)','does not create a generic surgery multiplier'])assert.ok(app.includes(phrase),phrase);});
+
+test('personalization UI exposes partial/total gastrectomy and documented ileal-resection states',()=>{
+ const app=readFileSync('public/app.js','utf8');
+ for(const text of ['gastrectomy-state','Partial gastrectomy','Total gastrectomy','ileal-resection-state','Documented ileal resection','mutually exclusive unless a documented revision/conversion model','future short-bowel syndrome modeling'])assert.ok(app.includes(text),text);
+});
