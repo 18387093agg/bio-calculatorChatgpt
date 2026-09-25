@@ -130,9 +130,13 @@ const requiredIdentity = new Map([
 // Reviewed generic/NFS records resolve requests for which token scoring would
 // otherwise prefer a materially narrower species, cut, organ, brand, or recipe.
 const reviewedGenericFdcIds = new Map([
-  ['lamb cooked', 2705905], ['salmon cooked', 2706285], ['cod cooked', 2706240],
-  ['oyster cooked', 2706353], ['cottage cheese', 2705747], ['peas cooked', 2709962],
-  ['tofu firm', 172448]
+  // These review decisions preserve the requested preparation state.  FNDDS
+  // NFS records that omit "cooked" are not substitutes for an explicit cooked
+  // request, even when their nutrient coverage is higher.
+  ['lamb cooked', 172573], ['salmon cooked', 171999], ['cod cooked', 175178],
+  ['oyster cooked', 2706353], ['egg whole cooked', 2707153],
+  ['broccoli cooked', 2709647], ['cottage cheese', 2705747],
+  ['peas cooked', 2709962], ['tofu firm', 172448]
 ]);
 function rankCandidate(requested, food) {
   const requestedTokens = tokens(requested), description = normalize(food.description), descriptionTokens = new Set(tokens(description));
@@ -149,7 +153,11 @@ function rankCandidate(requested, food) {
   const percentagePenalty = /\b\d+(?:\.\d+)?\s*%\b/.test(description) && !requestedTokens.includes('%') ? 24 : 0;
   const addedIngredientPenalty = /\b(with|added|prepared with)\s+(salt|sugar|oil|vitamin|flavor|calcium|magnesium)/.test(description) && !/\bwith\b/.test(normalize(requested)) ? 22 : 0;
   const extraTokenCount = Math.max(0, descriptionTokens.size - new Set(requestedTokens).size);
-  const genericBonus = /\b(nfs|ns as to|not specified|unspecified)\b/.test(description) ? 15 : 0;
+  // An NFS description can be appropriate only when it still records the
+  // explicitly requested state.  In particular, "Fish, salmon, NFS" must not
+  // displace a cooked salmon record for a "salmon cooked" request.
+  const genericBonus = /\b(nfs|ns as to|not specified|unspecified)\b/.test(description)
+    && (!requestedTokens.includes('cooked') || /\b(cooked|roasted|boiled|baked|braised|broiled|steamed|fried)\b/.test(description)) ? 15 : 0;
   const coverage = matched.length / requestedTokens.length;
   const reviewedGenericBonus = reviewedGenericFdcIds.get(normalize(requested)) === food.fdcId ? 500 : 0;
   const score = Math.round(coverage * 100 + (description.includes(normalize(requested)) ? 25 : 0) + (preferredType.get(food.dataType) ?? 0) + genericBonus + reviewedGenericBonus - conflicts.length * 200 - extraSpecificity.length * 10 - extraTokenCount * 2 - methodPenalty - percentagePenalty - addedIngredientPenalty);

@@ -52,6 +52,16 @@ test('deterministic matching prefers intended preparation and allowed data type'
   assert.ok(rankCandidate('spinach cooked', candidates[1]).score > rankCandidate('spinach cooked', candidates[0]).score);
 });
 
+test('explicit cooked requests do not resolve to an NFS record without a cooked state', () => {
+  const candidates = [
+    { fdcId: 1, description: 'Fish, salmon, NFS', dataType: 'Survey (FNDDS)' },
+    { fdcId: 2, description: 'Fish, salmon, Chinook, cooked, dry heat', dataType: 'SR Legacy' }
+  ];
+  const result = selectCandidate('salmon cooked', candidates, new Set());
+  assert.equal(result.selected.food.fdcId, 2);
+  assert.ok(rankCandidate('salmon cooked', candidates[1]).score > rankCandidate('salmon cooked', candidates[0]).score);
+});
+
 test('deterministic matching rejects unrequested identity and processing attributes', () => {
   const collisionCases = [
     ['oyster cooked', 'Ostrich, oyster, cooked'],
