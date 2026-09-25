@@ -59,8 +59,9 @@ test('food detail conversion preserves every valid raw nutrient and USDA provena
   assert.deepEqual(food.source, { name: 'USDA FoodData Central', official: true, endpoint: '/food/123', fdcId: 123 });
 });
 
-test('browser loads canonical dataset before explicit demo fallback', () => {
+test('browser loads only the complete canonical production dataset', () => {
   const app = readFileSync('public/app.js', 'utf8');
-  assert.ok(app.indexOf("fetch('/canonical-foods.json')") < app.indexOf("fetch('/demo-foods.json')"));
-  assert.match(app, /datasetMode='demo-fallback'/);
+  assert.match(app, /fetch\('\/canonical-foods\.json'\)/);
+  assert.match(app, /foods\?\.length!==87/);
+  assert.doesNotMatch(app, /demo-foods|demo-fallback/);
 });

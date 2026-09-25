@@ -8,7 +8,7 @@ This ledger records every physiological coefficient currently executable by the 
 | `iron.nonheme.absorption_range.v1` | absorbed = gross non-heme × 0.03–0.12; food non-heme only | D | Hurrell & Egli 2010; low | Meal and iron-status effects are not individualized. |
 | `iron.nonheme.low_acid.v1` | non-heme range × 0.70 when gastric acid is low/absent | E | mechanistic evidence review; low | Exact penalty is not directly established; sensitivity assumption, disclosed in output. Heme is excluded. |
 | `b12.food_bound.absorption_range.v1` | absorbed = food-bound gross × 0.30–0.60 | D | Institute of Medicine DRI chapter; low | Does not estimate intrinsic-factor capacity or dose saturation. |
-| `b12.free.absorption_range.v1` | absorbed = free/crystalline gross × 0.30–0.60 | D | Institute of Medicine DRI chapter; low | Only the small demo dose range; passive diffusion/high-dose supplements are not modeled. |
+| `b12.free.absorption_range.v1` | absorbed = free/crystalline gross × 0.30–0.60 | D | Institute of Medicine DRI chapter; low | Only the bounded dietary-dose range; passive diffusion/high-dose supplements are not modeled. |
 | `b12.food_bound.low_acid.v1` | food-bound range × 0.65 when gastric acid is low/absent | E | food-cobalamin malabsorption literature; low | Sensitivity assumption, not patient-specific. Free B12 is excluded. |
 | `thiamine.energy.optimization.v1` | target = energy × 0.60–0.68 mg/1000 kcal | E | project model; low | Not an official RDA and not generalized to other nutrients. |
 | `pral.remer.manz.v1` | 0.49 protein + 0.037 phosphorus − 0.021 potassium − 0.026 magnesium − 0.013 calcium | C | Remer & Manz 1995; moderate | Estimates renal acid load, not blood pH. |
@@ -25,4 +25,4 @@ This ledger records every physiological coefficient currently executable by the 
 | `active_form.conversion.v1` | none | F | nutrient- and patient-specific metabolism; low | Stage is unavailable. |
 | `pathology.malabsorption.generic.v1` | none | F | disease-specific diagnosis/data required; low | No generic pathology multiplier is applied. |
 
-Official RDA/AI/EAR/PRI/AR/UL records are **B**, must cite their jurisdiction, population, life stage, and evidence row, and are not calculation coefficients. The demo contains only US adult examples and labels them accordingly. “Optimal” values exist only for the thiamine project rule above. Missing values remain unavailable, never zero.
+Official RDA/AI/EAR/PRI/AR/UL records are **B**, must cite their jurisdiction, population, life stage, and evidence row, and are not calculation coefficients. The reference-target dataset contains US adult examples and labels them accordingly. “Optimal” values exist only for the thiamine project rule above. Missing values remain unavailable, never zero.

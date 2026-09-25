@@ -10,8 +10,12 @@ const MAX_ATTEMPTS = 5;
 const CACHE_DIR = '.cache/fdc-api';
 const [, , outputPath = 'public/canonical-foods.json', reportPath = 'data/fdc-resolution-report.json'] = process.argv;
 
-const normalize = value => String(value ?? '').toLowerCase().replace(/\bpercent\b/g, '%').replace(/[^a-z0-9%]+/g, ' ').trim();
-const tokens = value => normalize(value).split(' ').filter(Boolean);
+const normalize = value => String(value ?? '').toLowerCase().replace(/\bpercent\b/g, '%').replace(/([0-9])%/g, '$1 %').replace(/[^a-z0-9%]+/g, ' ').trim();
+const canonicalToken = value => value.length > 4 && value.endsWith('ies') ? `${value.slice(0, -3)}y`
+  : value.length > 4 && value.endsWith('oes') ? value.slice(0, -2)
+    : value.length > 3 && value.endsWith('s') && !value.endsWith('ss') ? value.slice(0, -1)
+      : value;
+const tokens = value => normalize(value).split(' ').filter(Boolean).map(canonicalToken);
 const slug = value => normalize(value).replace(/%/g, 'percent').replace(/ /g, '-');
 const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 const unit = value => String(value ?? '').trim().replace(/^ug$/i, 'µg').replace(/^kcal$/i, 'kcal').replace(/^g$/i, 'g').replace(/^mg$/i, 'mg');
@@ -30,15 +34,26 @@ function validateManifest(value) {
 }
 async function cachedRequest(path, searchParams, apiKey) {
   const url = new URL(API_ORIGIN + path);
-  for (const [name, value] of Object.entries(searchParams)) url.searchParams.set(name, value);
-  const cachePath = join(CACHE_DIR, cacheName(url.toString()));
+  // FDC's search filters are arrays in the POST API. Encoding the data types as
+  // a comma-delimited GET parameter is rejected by the API gateway (and can be
+  // misinterpreted by intermediaries), so searches use the documented JSON
+  // representation while food-detail acquisition remains a simple GET.
+  const isSearch = path === '/foods/search';
+  const requestBody = isSearch ? JSON.stringify(searchParams) : null;
+  if (!isSearch) for (const [name, value] of Object.entries(searchParams)) url.searchParams.set(name, value);
+  const cachePath = join(CACHE_DIR, cacheName(`${url}\n${requestBody ?? ''}`));
   try { return JSON.parse(await readFile(cachePath, 'utf8')); } catch {}
   let lastError;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
     try {
-      const response = await fetch(url, { headers: { Accept: 'application/json', 'X-Api-Key': apiKey }, signal: controller.signal });
+      const response = await fetch(url, {
+        method: isSearch ? 'POST' : 'GET',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-Api-Key': apiKey },
+        body: requestBody,
+        signal: controller.signal
+      });
       if (!response.ok) {
         const retryable = response.status === 429 || response.status >= 500;
         const retryAfter = Number(response.headers.get('retry-after'));
@@ -78,7 +93,7 @@ function selectCandidate(requested, candidates, usedIds) {
 }
 function canonicalFood(record) {
   if (!Number.isInteger(record.fdcId) || !record.description || !record.dataType || !Array.isArray(record.foodNutrients)) throw new Error('Food-detail response is missing fdcId, description, dataType, or foodNutrients.');
-  const fdcNutrients = record.foodNutrients.map(entry => ({ nutrientId: entry.nutrient?.id ?? entry.nutrientId ?? null, nutrientNumber: entry.nutrient?.number ?? null, nutrientName: entry.nutrient?.name ?? entry.nutrientName ?? null, unit: unit(entry.nutrient?.unitName ?? entry.unitName), amount: entry.amount, dataPoints: entry.dataPoints ?? null, derivationCode: entry.foodNutrientDerivation?.code ?? null })).filter(entry => Number.isInteger(entry.nutrientId) && entry.nutrientName && entry.unit && Number.isFinite(entry.amount));
+  const fdcNutrients = record.foodNutrients.map(entry => ({ nutrientId: entry.nutrient?.id ?? entry.nutrientId ?? null, nutrientNumber: entry.nutrient?.number ?? null, nutrientName: entry.nutrient?.name ?? entry.nutrientName ?? null, unit: unit(entry.nutrient?.unitName ?? entry.unitName), amount: entry.amount, dataPoints: entry.dataPoints ?? null, derivationCode: entry.foodNutrientDerivation?.code ?? null, derivationDescription: entry.foodNutrientDerivation?.description ?? null })).filter(entry => Number.isInteger(entry.nutrientId) && entry.nutrientName && entry.unit && Number.isFinite(entry.amount));
   if (!fdcNutrients.length) throw new Error(`FDC ${record.fdcId} contains no valid nutrient values.`);
   const mapped = new Map([[1008, 'energy'], [1003, 'protein'], [1004, 'fat'], [1005, 'carbohydrate'], [1079, 'fiber'], [1087, 'calcium'], [1089, 'iron_total'], [1092, 'potassium'], [1095, 'zinc'], [1162, 'vitamin_c'], [1165, 'thiamine'], [1178, 'vitamin_b12_food']]);
   const nutrients = {}, provenance = {};
@@ -94,7 +109,10 @@ async function main() {
   const foods = [], entries = [], usedIds = new Set();
   for (let index = 0; index < manifest.foods.length; index++) {
     const requestedFood = manifest.foods[index], manifestIdentifier = `${String(index + 1).padStart(3, '0')}-${slug(requestedFood)}`;
-    const search = await cachedRequest('/foods/search', { query: requestedFood, dataType: DATA_TYPES.join(','), pageSize: '50', pageNumber: '1', sortBy: 'dataType.keyword', sortOrder: 'asc' }, apiKey);
+    // Let FDC return relevance-ranked candidates, then apply our deterministic
+    // identity/data-type ranking. Sorting the remote result by data type before
+    // taking page one can discard the actual food match entirely.
+    const search = await cachedRequest('/foods/search', { query: requestedFood, dataType: DATA_TYPES, pageSize: 50, pageNumber: 1 }, apiKey);
     if (!Array.isArray(search.foods)) throw new Error(`USDA FDC search response for manifest entry ${manifestIdentifier} has no foods array.`);
     const resolution = selectCandidate(requestedFood, search.foods, usedIds);
     const matchSearchInformation = { endpoint: '/foods/search', query: requestedFood, allowedDataTypes: DATA_TYPES, returnedCount: search.foods.length, totalHits: search.totalHits ?? null, topCandidates: resolution.ranked.slice(0, 5).map(x => ({ fdcId: x.food.fdcId, description: x.food.description, dataType: x.food.dataType, score: x.score, coverage: x.coverage })) };
@@ -105,7 +123,16 @@ async function main() {
   }
   const acquiredAt = new Date().toISOString(), resolved = entries.filter(x => x.resolutionStatus === 'resolved').length;
   const report = { schemaVersion: 2, generatedAt: acquiredAt, acquisitionSource: { name: 'USDA FoodData Central API', official: true, origin: API_ORIGIN, searchEndpoint: '/foods/search', detailEndpoint: '/food/{fdcId}' }, total: entries.length, resolved, unresolved: entries.length - resolved, entries };
-  const canonical = { schemaVersion: 2, status: resolved === entries.length ? 'complete' : 'partial', source: { name: 'USDA FoodData Central', official: true, acquisition: 'FoodData Central API', acquiredAt }, nutrientForms: { iron_total: { nutrientKey: 'iron', origin: 'unknown', chemicalForm: 'total_iron', hemeFraction: null, label: 'Total iron; heme fraction unavailable' } }, foods, targets };
+  const canonical = { schemaVersion: 2, status: resolved === entries.length ? 'complete' : 'partial', source: { name: 'USDA FoodData Central', official: true, acquisition: 'FoodData Central API', acquiredAt }, nutrientForms: {
+    iron_total: { nutrientKey: 'iron', origin: 'unknown', chemicalForm: 'total_iron', hemeFraction: null, label: 'Total iron; heme fraction unavailable' },
+    vitamin_b12_food: { nutrientKey: 'vitamin_b12', origin: 'unknown', chemicalForm: 'total_cobalamin', foodBound: true, label: 'Food-bound total vitamin B12' },
+    calcium: { nutrientKey: 'calcium', origin: 'unknown', label: 'Total calcium' },
+    potassium: { nutrientKey: 'potassium', origin: 'unknown', label: 'Total potassium' },
+    zinc: { nutrientKey: 'zinc', origin: 'unknown', label: 'Total zinc' },
+    vitamin_c: { nutrientKey: 'vitamin_c', origin: 'unknown', label: 'Total vitamin C' },
+    thiamine: { nutrientKey: 'thiamine', origin: 'unknown', label: 'Total thiamine' },
+    fiber: { nutrientKey: 'fiber', origin: 'unknown', label: 'Total dietary fiber' }
+  }, foods, targets };
   await atomicJson(outputPath, canonical); await atomicJson(reportPath, report);
   if (resolved !== entries.length) throw new Error(`Resolved ${resolved}/${entries.length}; ${entries.length - resolved} entries remain unresolved. See ${reportPath}.`);
   console.log(`Acquired ${resolved} official USDA FDC foods via the API and wrote ${outputPath}.`);
