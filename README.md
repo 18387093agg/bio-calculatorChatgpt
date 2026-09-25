@@ -29,6 +29,10 @@ The production server serves the built `dist/public` bundle at port 3000. Set `P
 
 `data/fdc-food-manifest.json` defines the required food identities. With `USDA_FDC_API_KEY` set only in the process environment, `npm run import:fdc` resolves the manifest through the official API and atomically writes `public/canonical-foods.json` plus `data/fdc-resolution-report.json`. The application fails visibly if the complete canonical dataset is unavailable; it never substitutes sample composition data.
 
+## Evidence-bounded personalization
+
+The healthy baseline is the default. The single canonical engine supports qualitative, state-aware mechanisms for hypochlorhydria, celiac disease, Crohn's disease, ulcerative colitis, pancreatic exocrine insufficiency, bariatric surgery, gastrectomy, ileal resection, short bowel syndrome, chronic kidney disease, and chronic liver disease. Conditions do not apply generic multipliers or modify official population references; unavailable quantitative physiology remains unavailable.
+
 ## Supabase (optional persistence)
 
 The public calculator deliberately has no browser Supabase dependency. To add persistence/authentication:

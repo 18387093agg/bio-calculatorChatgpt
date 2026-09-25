@@ -1,4 +1,16 @@
 # Known limitations
+
+## Short bowel syndrome
+
+The application cannot infer SBS from an ileal resection, Crohn's disease, symptoms, or bowel length. Documented anatomy identifies clinically relevant pathways, but available human guidelines do not provide transferable nutrient/form-specific meal equations across anatomy, adaptation, transit, colon continuity, and nutrition support. Consequently, B12, fat/fat-soluble vitamins, minerals, fluid/electrolyte loss, adaptation, and parenteral-support effects remain qualitative and official reference values remain unchanged.
+
+## Chronic kidney disease
+
+CKD selection does not predict calcitriol, serum nutrient concentrations, renal excretion, dialysis removal, or individualized restriction targets. These depend on stage, laboratory results, medication, residual function, modality, and prescription. Vitamin-D conversion, renal mineral handling, anemia/iron context, dialysis losses, and protein/energy clinical guidance are therefore qualitative and never alter intestinal absorption or official reference values.
+
+## Chronic liver disease
+
+The application cannot predict hepatic vitamin conversion, storage, transport, serum biomarkers, trace-mineral status, bleeding/diuretic losses, or treatment needs. Etiology and severity are heterogeneous. Documented cholestasis adds a qualitative bile-mediated A/D/E/K pathway, but no shared vitamin multiplier or supplement dose; non-cholestatic disease does not inherit that pathway.
 This is an estimation framework, not a metabolic simulation, laboratory measurement, or diagnostic tool. Quantitative absorption is intentionally limited to source-aware iron and B12 ranges. Systemic-pool, intracellular, active-form, generic pathology, and unsupported interaction stages remain unavailable rather than zero.
 
 The local browser bundle contains the canonical 87-food dataset acquired from official USDA FoodData Central responses. Its deterministic resolution report retains the selected FDC identifiers, candidate reasoning, and value-level nutrient provenance. Re-running acquisition requires a locally supplied USDA API key; no key or fallback composition is shipped.
@@ -36,5 +48,5 @@ RYGB and sleeve selections suppress only the overlapping hypochlorhydria gastric
 * Gastrectomy iron output is limited to qualitative acid-dependent **non-heme** handling. It does not infer heme-iron loss, blood loss, dietary intake, deficiency, or a higher requirement from the operation.
 * A documented ileal resection is not assumed to have a known length, terminal involvement, colon continuity, adaptation interval, or underlying cause. No length-to-B12 equation or personalized target is available.
 * Vitamin A, D, E, and K after ileal resection are separate qualitative bile-acid/fat-digestion mechanisms; deficiency, steatorrhea, and serum results are not collapsed into a shared absorption multiplier. Calcium and magnesium remain monitoring contexts.
-* Ileal resection suppresses the overlapping Crohn ileal B12 notice, but does not erase independent Crohn disease mechanisms. It is not a short-bowel syndrome model, and does not pre-empt that future condition.
+* Ileal resection suppresses the overlapping Crohn ileal B12 notice, but does not erase independent Crohn disease mechanisms. It is not a short-bowel syndrome model; documented SBS with absent terminal ileum supplies the more specific pathway and suppresses both overlapping notices.
 * Gastrectomy suppresses overlapping hypochlorhydria acid-pathway notices. Bariatric procedures and gastrectomy are mutually exclusive without an evidence-backed documented revision/conversion model.
