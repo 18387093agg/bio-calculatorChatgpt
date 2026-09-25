@@ -24,6 +24,17 @@ test('status scale retains exact intake and markers independently', () => {
   assert.ok(bar.markers.rda < bar.markers.ul);
 });
 
+test('status scale supports below-RDA, optimal, above-optimal, and above-UL actual values without clamping', () => {
+  const target = { rda: 10, optimalMin: 15, optimalMax: 20, ul: 30, unit: 'mg' };
+  for (const actual of [5, 17, 25, 35]) {
+    const bar = progress(actual, target);
+    assert.equal(bar.actual, actual / bar.scale * 100);
+    assert.ok(bar.markers.rda < bar.markers.optimalMin);
+    assert.ok(bar.markers.optimalMin < bar.markers.optimalMax);
+    assert.ok(bar.markers.optimalMax < bar.markers.ul);
+  }
+});
+
 test('local workspace repository restores persisted user workspace', () => {
   const values = new Map(); const storage = { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value) };
   const first = createWorkspaceRepository(storage); first.replace({ meal: [{ id: 'meal-1' }], settings: { language: 'el' } });
