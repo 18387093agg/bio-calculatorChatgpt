@@ -1,450 +1,977 @@
 {
-  "generatedAt": "2026-09-25T00:00:00Z",
-  "input": null,
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-25T00:00:00.000Z",
+  "acquisitionSource": {
+    "name": "USDA FoodData Central API",
+    "official": true,
+    "origin": "https://api.nal.usda.gov/fdc/v1",
+    "searchEndpoint": "/foods/search",
+    "detailEndpoint": "/food/{fdcId}"
+  },
   "total": 87,
   "resolved": 0,
   "unresolved": 87,
   "externalDependency": {
-    "url": "https://fdc.nal.usda.gov/download-datasets/",
-    "required": "Official USDA FoodData Central Foundation/SR bulk JSON export or API response",
-    "observedFailure": "CONNECT tunnel failed, response 403 for fdc.nal.usda.gov and api.nal.usda.gov from this environment",
-    "reproducibleCommand": "npm run import:fdc -- /path/to/FoodData_Central_foundation_food_json.json"
+    "requiredEnvironmentVariable": "USDA_FDC_API_KEY",
+    "status": "missing"
   },
   "entries": [
     {
-      "descriptor": "beef ground cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "beef liver cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "chicken breast roasted",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "chicken thigh roasted",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "turkey breast roasted",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "pork loin cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "lamb cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "salmon cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "tuna canned water",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "sardines canned",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "cod cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "shrimp cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "oyster cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "egg whole cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "milk 2 percent",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "yogurt plain",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "cheddar cheese",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "cottage cheese",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "tofu firm",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "tempeh cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "lentils cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "chickpeas cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "black beans cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "kidney beans cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "navy beans cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "peas cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "edamame cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "almonds",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "walnuts",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "cashews",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "pistachios",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "peanuts",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "sunflower seeds",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "pumpkin seeds",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "chia seeds",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "flaxseed",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "sesame seeds",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "oats cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "rice white cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "rice brown cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "quinoa cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "barley pearled cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "whole wheat bread",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "white bread",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "pasta cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "potato boiled",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "sweet potato baked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "spinach cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "kale cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "broccoli cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "cauliflower cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "cabbage cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "carrot cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "tomato raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "bell pepper red raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "zucchini cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "asparagus cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "mushroom cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "onion raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "garlic raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "beet cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "green beans cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "brussels sprouts cooked",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "avocado raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "olive ripe",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "apple raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "banana raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "orange raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "grapefruit raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "strawberry raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "blueberry raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "raspberry raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "grapes raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "watermelon raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "cantaloupe raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "kiwifruit raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "mango raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "pineapple raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "pear raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "peach raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "plum raw",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "dates",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "raisins",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "olive oil",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "butter",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "dark chocolate",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
-    },
-    {
-      "descriptor": "coffee brewed",
-      "status": "unresolved",
-      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+      "manifestIdentifier": "001-beef-ground-cooked",
+      "requestedFood": "beef ground cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "002-beef-liver-cooked",
+      "requestedFood": "beef liver cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "003-chicken-breast-roasted",
+      "requestedFood": "chicken breast roasted",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "004-chicken-thigh-roasted",
+      "requestedFood": "chicken thigh roasted",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "005-turkey-breast-roasted",
+      "requestedFood": "turkey breast roasted",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "006-pork-loin-cooked",
+      "requestedFood": "pork loin cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "007-lamb-cooked",
+      "requestedFood": "lamb cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "008-salmon-cooked",
+      "requestedFood": "salmon cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "009-tuna-canned-water",
+      "requestedFood": "tuna canned water",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "010-sardines-canned",
+      "requestedFood": "sardines canned",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "011-cod-cooked",
+      "requestedFood": "cod cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "012-shrimp-cooked",
+      "requestedFood": "shrimp cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "013-oyster-cooked",
+      "requestedFood": "oyster cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "014-egg-whole-cooked",
+      "requestedFood": "egg whole cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "015-milk-2-percent",
+      "requestedFood": "milk 2 percent",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "016-yogurt-plain",
+      "requestedFood": "yogurt plain",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "017-cheddar-cheese",
+      "requestedFood": "cheddar cheese",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "018-cottage-cheese",
+      "requestedFood": "cottage cheese",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "019-tofu-firm",
+      "requestedFood": "tofu firm",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "020-tempeh-cooked",
+      "requestedFood": "tempeh cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "021-lentils-cooked",
+      "requestedFood": "lentils cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "022-chickpeas-cooked",
+      "requestedFood": "chickpeas cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "023-black-beans-cooked",
+      "requestedFood": "black beans cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "024-kidney-beans-cooked",
+      "requestedFood": "kidney beans cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "025-navy-beans-cooked",
+      "requestedFood": "navy beans cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "026-peas-cooked",
+      "requestedFood": "peas cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "027-edamame-cooked",
+      "requestedFood": "edamame cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "028-almonds",
+      "requestedFood": "almonds",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "029-walnuts",
+      "requestedFood": "walnuts",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "030-cashews",
+      "requestedFood": "cashews",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "031-pistachios",
+      "requestedFood": "pistachios",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "032-peanuts",
+      "requestedFood": "peanuts",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "033-sunflower-seeds",
+      "requestedFood": "sunflower seeds",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "034-pumpkin-seeds",
+      "requestedFood": "pumpkin seeds",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "035-chia-seeds",
+      "requestedFood": "chia seeds",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "036-flaxseed",
+      "requestedFood": "flaxseed",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "037-sesame-seeds",
+      "requestedFood": "sesame seeds",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "038-oats-cooked",
+      "requestedFood": "oats cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "039-rice-white-cooked",
+      "requestedFood": "rice white cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "040-rice-brown-cooked",
+      "requestedFood": "rice brown cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "041-quinoa-cooked",
+      "requestedFood": "quinoa cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "042-barley-pearled-cooked",
+      "requestedFood": "barley pearled cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "043-whole-wheat-bread",
+      "requestedFood": "whole wheat bread",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "044-white-bread",
+      "requestedFood": "white bread",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "045-pasta-cooked",
+      "requestedFood": "pasta cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "046-potato-boiled",
+      "requestedFood": "potato boiled",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "047-sweet-potato-baked",
+      "requestedFood": "sweet potato baked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "048-spinach-cooked",
+      "requestedFood": "spinach cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "049-kale-cooked",
+      "requestedFood": "kale cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "050-broccoli-cooked",
+      "requestedFood": "broccoli cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "051-cauliflower-cooked",
+      "requestedFood": "cauliflower cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "052-cabbage-cooked",
+      "requestedFood": "cabbage cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "053-carrot-cooked",
+      "requestedFood": "carrot cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "054-tomato-raw",
+      "requestedFood": "tomato raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "055-bell-pepper-red-raw",
+      "requestedFood": "bell pepper red raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "056-zucchini-cooked",
+      "requestedFood": "zucchini cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "057-asparagus-cooked",
+      "requestedFood": "asparagus cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "058-mushroom-cooked",
+      "requestedFood": "mushroom cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "059-onion-raw",
+      "requestedFood": "onion raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "060-garlic-raw",
+      "requestedFood": "garlic raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "061-beet-cooked",
+      "requestedFood": "beet cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "062-green-beans-cooked",
+      "requestedFood": "green beans cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "063-brussels-sprouts-cooked",
+      "requestedFood": "brussels sprouts cooked",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "064-avocado-raw",
+      "requestedFood": "avocado raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "065-olive-ripe",
+      "requestedFood": "olive ripe",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "066-apple-raw",
+      "requestedFood": "apple raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "067-banana-raw",
+      "requestedFood": "banana raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "068-orange-raw",
+      "requestedFood": "orange raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "069-grapefruit-raw",
+      "requestedFood": "grapefruit raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "070-strawberry-raw",
+      "requestedFood": "strawberry raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "071-blueberry-raw",
+      "requestedFood": "blueberry raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "072-raspberry-raw",
+      "requestedFood": "raspberry raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "073-grapes-raw",
+      "requestedFood": "grapes raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "074-watermelon-raw",
+      "requestedFood": "watermelon raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "075-cantaloupe-raw",
+      "requestedFood": "cantaloupe raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "076-kiwifruit-raw",
+      "requestedFood": "kiwifruit raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "077-mango-raw",
+      "requestedFood": "mango raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "078-pineapple-raw",
+      "requestedFood": "pineapple raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "079-pear-raw",
+      "requestedFood": "pear raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "080-peach-raw",
+      "requestedFood": "peach raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "081-plum-raw",
+      "requestedFood": "plum raw",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "082-dates",
+      "requestedFood": "dates",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "083-raisins",
+      "requestedFood": "raisins",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "084-olive-oil",
+      "requestedFood": "olive oil",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "085-butter",
+      "requestedFood": "butter",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "086-dark-chocolate",
+      "requestedFood": "dark chocolate",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
+    },
+    {
+      "manifestIdentifier": "087-coffee-brewed",
+      "requestedFood": "coffee brewed",
+      "selectedFdcId": null,
+      "selectedDescription": null,
+      "dataType": null,
+      "matchSearchInformation": null,
+      "resolutionStatus": "unresolved",
+      "reasonForSelection": null,
+      "unresolvedReason": "USDA_FDC_API_KEY is not configured in this execution environment; the official API was not called and no record was fabricated."
     }
   ]
 }

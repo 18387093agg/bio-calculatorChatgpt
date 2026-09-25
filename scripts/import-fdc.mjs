@@ -1,13 +1,114 @@
 #!/usr/bin/env node
-import {readFile,writeFile} from'node:fs/promises';
-const [inputPath,outputPath='public/canonical-foods.json',reportPath='data/fdc-resolution-report.json']=process.argv.slice(2);
-if(!inputPath){console.error('Usage: node scripts/import-fdc.mjs <official-fdc-json> [canonical-output] [resolution-report]');process.exit(2)}
-const manifest=JSON.parse(await readFile('data/fdc-food-manifest.json','utf8'));const targets=JSON.parse(await readFile('data/reference-targets.json','utf8'));const source=JSON.parse(await readFile(inputPath,'utf8'));const records=Array.isArray(source)?source:(source.foods??[]);
-const normalize=x=>x.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();const preferred=new Map([['Foundation',3],['SR Legacy',2],['Survey (FNDDS)',1]]);
-const nutrientMap=new Map([[1008,['energy','kcal']],[1003,['protein','g']],[1004,['fat','g']],[1005,['carbohydrate','g']],[1079,['fiber','g']],[1087,['calcium','mg']],[1089,['iron_total','mg']],[1092,['potassium','mg']],[1095,['zinc','mg']],[1162,['vitamin_c','mg']],[1165,['thiamine','mg']],[1178,['vitamin_b12_food','µg']]]);
-const canonicalForms={fiber:{nutrientKey:'fiber',origin:'plant',label:'Dietary fiber'},calcium:{nutrientKey:'calcium',origin:'plant',label:'Calcium'},iron_total:{nutrientKey:'iron',origin:'plant',label:'Total iron; heme fraction unavailable'},potassium:{nutrientKey:'potassium',origin:'plant',label:'Potassium'},zinc:{nutrientKey:'zinc',origin:'plant',label:'Zinc'},vitamin_c:{nutrientKey:'vitamin_c',origin:'plant',label:'Vitamin C'},thiamine:{nutrientKey:'thiamine',origin:'plant',label:'Thiamine'},vitamin_b12_food:{nutrientKey:'vitamin_b12',origin:'animal',foodBound:true,label:'Food-bound vitamin B12'}};
-const basis=d=>/raw/i.test(d)?'raw':/(cooked|roasted|boiled|baked|canned|brewed)/i.test(d)?'cooked':'ready_to_eat';
-const words=s=>new Set(normalize(s).split(' '));const score=(query,record)=>{const q=words(query),d=words(record.description??'');let hits=0;for(const w of q)if(d.has(w))hits++;return hits/q.size+(preferred.get(record.dataType)??0)/100};
-const used=new Set(),foods=[],resolution=[];
-for(const descriptor of manifest.foods){const ranked=records.map(record=>({record,score:score(descriptor,record)})).filter(x=>x.score>=.70).sort((a,b)=>b.score-a.score);const winner=ranked.find(x=>!used.has(x.record.fdcId));if(!winner){resolution.push({descriptor,status:'unresolved',reason:'No sufficiently matching Foundation/SR/FNDDS record in supplied official export.'});continue}const r=winner.record;used.add(r.fdcId);const nutrients={};const provenance={};for(const entry of r.foodNutrients??[]){const id=entry.nutrient?.id??entry.nutrientId;const mapped=nutrientMap.get(id);if(!mapped)continue;const [key,unit]=mapped,actual=String(entry.nutrient?.unitName??entry.unitName??'').replace(/^UG$/i,'µg').toLowerCase().replace('µg','µg');const amount=entry.amount;if(actual!==unit.toLowerCase()||!Number.isFinite(amount)||amount<=0)continue;nutrients[key]=amount;provenance[key]={evidenceId:`fdc:${r.fdcId}`,fdcNutrientId:id,unit,amountPer100g:amount}}if(!Object.hasOwn(nutrients,'energy')){resolution.push({descriptor,status:'unresolved',reason:`FDC ${r.fdcId} lacks a positive mapped energy value.`});used.delete(r.fdcId);continue}const rawCookedBasis=basis(r.description);foods.push({id:`fdc-${r.fdcId}`,fdcId:r.fdcId,name:r.description,category:r.foodCategory?.description??r.foodCategory??'USDA food',dataType:r.dataType,publicationDate:r.publicationDate??null,rawCookedBasis,preparations:[{method:rawCookedBasis,basis:rawCookedBasis,yield:null,retention:{},evidenceId:`fdc:${r.fdcId}`}],nutrients,provenance});resolution.push({descriptor,status:'resolved',fdcId:r.fdcId,description:r.description,dataType:r.dataType})}
-const output={schemaVersion:1,status:resolution.some(x=>x.status==='unresolved')?'partial':'complete',source:{name:'USDA FoodData Central',official:true,importedAt:new Date().toISOString(),input:inputPath},nutrientForms:canonicalForms,foods,targets};await writeFile(outputPath,JSON.stringify(output,null,2)+'\n');await writeFile(reportPath,JSON.stringify({generatedAt:new Date().toISOString(),input:inputPath,total:manifest.foods.length,resolved:foods.length,unresolved:resolution.filter(x=>x.status==='unresolved').length,entries:resolution},null,2)+'\n');if(foods.length!==manifest.foods.length){console.error(`Resolved ${foods.length}/${manifest.foods.length}; see ${reportPath}`);process.exitCode=1}else console.log(`Imported ${foods.length} traceable FDC foods to ${outputPath}`);
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { dirname, join } from 'node:path';
+
+const API_ORIGIN = 'https://api.nal.usda.gov/fdc/v1';
+const DATA_TYPES = ['Foundation', 'SR Legacy', 'Survey (FNDDS)'];
+const TIMEOUT_MS = 20_000;
+const MAX_ATTEMPTS = 5;
+const CACHE_DIR = '.cache/fdc-api';
+const [, , outputPath = 'public/canonical-foods.json', reportPath = 'data/fdc-resolution-report.json'] = process.argv;
+
+const normalize = value => String(value ?? '').toLowerCase().replace(/\bpercent\b/g, '%').replace(/[^a-z0-9%]+/g, ' ').trim();
+const tokens = value => normalize(value).split(' ').filter(Boolean);
+const slug = value => normalize(value).replace(/%/g, 'percent').replace(/ /g, '-');
+const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+const unit = value => String(value ?? '').trim().replace(/^ug$/i, 'µg').replace(/^kcal$/i, 'kcal').replace(/^g$/i, 'g').replace(/^mg$/i, 'mg');
+const preparation = description => /\braw\b/i.test(description) ? 'raw' : /\b(cooked|roasted|boiled|baked|canned|brewed)\b/i.test(description) ? 'cooked' : 'ready_to_eat';
+const redact = (message, key) => key ? String(message).split(key).join('[REDACTED]') : String(message);
+const cacheName = value => createHash('sha256').update(value).digest('hex') + '.json';
+
+async function readJson(path, label) {
+  try { return JSON.parse(await readFile(path, 'utf8')); }
+  catch (error) { throw new Error(`${label} is not valid readable JSON: ${error.message}`); }
+}
+function validateManifest(value) {
+  if (!value || !Array.isArray(value.foods) || value.foods.length !== 87 || value.foods.some(x => typeof x !== 'string' || !x.trim())) throw new Error('data/fdc-food-manifest.json must contain exactly 87 non-empty food descriptors.');
+  if (new Set(value.foods.map(normalize)).size !== value.foods.length) throw new Error('FDC manifest descriptors must be unique.');
+  return value;
+}
+async function cachedRequest(path, searchParams, apiKey) {
+  const url = new URL(API_ORIGIN + path);
+  for (const [name, value] of Object.entries(searchParams)) url.searchParams.set(name, value);
+  const cachePath = join(CACHE_DIR, cacheName(url.toString()));
+  try { return JSON.parse(await readFile(cachePath, 'utf8')); } catch {}
+  let lastError;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    try {
+      const response = await fetch(url, { headers: { Accept: 'application/json', 'X-Api-Key': apiKey }, signal: controller.signal });
+      if (!response.ok) {
+        const retryable = response.status === 429 || response.status >= 500;
+        const retryAfter = Number(response.headers.get('retry-after'));
+        if (!retryable) throw new Error(`USDA FDC API returned HTTP ${response.status} for ${path}.`);
+        if (attempt === MAX_ATTEMPTS) throw new Error(`USDA FDC API returned HTTP ${response.status} after ${MAX_ATTEMPTS} attempts for ${path}.`);
+        await sleep(Number.isFinite(retryAfter) ? Math.min(retryAfter * 1000, 60_000) : 500 * 2 ** (attempt - 1)); continue;
+      }
+      const body = await response.json().catch(() => { throw new Error(`USDA FDC API returned invalid JSON for ${path}.`); });
+      if (!body || typeof body !== 'object') throw new Error(`USDA FDC API returned an invalid JSON value for ${path}.`);
+      await mkdir(CACHE_DIR, { recursive: true });
+      await writeFile(cachePath, JSON.stringify(body) + '\n', { mode: 0o600 });
+      return body;
+    } catch (error) {
+      lastError = error;
+      if (!['AbortError', 'TypeError'].includes(error.name) || attempt === MAX_ATTEMPTS) break;
+      await sleep(500 * 2 ** (attempt - 1));
+    } finally { clearTimeout(timer); }
+  }
+  throw new Error(redact(lastError?.name === 'AbortError' ? `USDA FDC API request timed out after ${TIMEOUT_MS} ms for ${path}.` : lastError?.message ?? `USDA FDC API request failed for ${path}.`, apiKey));
+}
+
+const preferredType = new Map([['Foundation', 30], ['SR Legacy', 20], ['Survey (FNDDS)', 10]]);
+const conflictPairs = [['raw', ['cooked', 'roasted', 'boiled', 'baked']], ['cooked', ['raw']], ['water', ['oil']], ['whole', ['white']]];
+function rankCandidate(requested, food) {
+  const requestedTokens = tokens(requested), description = normalize(food.description), descriptionTokens = new Set(tokens(description));
+  const matched = requestedTokens.filter(token => descriptionTokens.has(token)), missing = requestedTokens.filter(token => !descriptionTokens.has(token));
+  const conflicts = conflictPairs.flatMap(([wanted, forbidden]) => requestedTokens.includes(wanted) ? forbidden.filter(x => descriptionTokens.has(x)) : []);
+  const coverage = matched.length / requestedTokens.length;
+  const score = Math.round(coverage * 100 + (description.includes(normalize(requested)) ? 25 : 0) + (preferredType.get(food.dataType) ?? 0) - conflicts.length * 45);
+  return { food, score, coverage, matched, missing, conflicts };
+}
+function selectCandidate(requested, candidates, usedIds) {
+  const ranked = candidates.filter(food => Number.isInteger(food.fdcId) && DATA_TYPES.includes(food.dataType) && !usedIds.has(food.fdcId)).map(food => rankCandidate(requested, food)).sort((a, b) => b.score - a.score || b.coverage - a.coverage || a.food.fdcId - b.food.fdcId);
+  const selected = ranked[0];
+  if (!selected || selected.coverage < 0.67 || selected.conflicts.length) return { selected: null, ranked, reason: selected ? `Best result failed identity criteria (coverage ${selected.coverage.toFixed(2)}, conflicts: ${selected.conflicts.join(', ') || 'none'}).` : 'Search returned no unused result with an allowed USDA data type.' };
+  return { selected, ranked, reason: `Highest deterministic identity score (${selected.score}); matched ${selected.matched.join(', ')}; preferred data type ${selected.food.dataType}; FDC ID used as final tie-breaker.` };
+}
+function canonicalFood(record) {
+  if (!Number.isInteger(record.fdcId) || !record.description || !record.dataType || !Array.isArray(record.foodNutrients)) throw new Error('Food-detail response is missing fdcId, description, dataType, or foodNutrients.');
+  const fdcNutrients = record.foodNutrients.map(entry => ({ nutrientId: entry.nutrient?.id ?? entry.nutrientId ?? null, nutrientNumber: entry.nutrient?.number ?? null, nutrientName: entry.nutrient?.name ?? entry.nutrientName ?? null, unit: unit(entry.nutrient?.unitName ?? entry.unitName), amount: entry.amount, dataPoints: entry.dataPoints ?? null, derivationCode: entry.foodNutrientDerivation?.code ?? null })).filter(entry => Number.isInteger(entry.nutrientId) && entry.nutrientName && entry.unit && Number.isFinite(entry.amount));
+  if (!fdcNutrients.length) throw new Error(`FDC ${record.fdcId} contains no valid nutrient values.`);
+  const mapped = new Map([[1008, 'energy'], [1003, 'protein'], [1004, 'fat'], [1005, 'carbohydrate'], [1079, 'fiber'], [1087, 'calcium'], [1089, 'iron_total'], [1092, 'potassium'], [1095, 'zinc'], [1162, 'vitamin_c'], [1165, 'thiamine'], [1178, 'vitamin_b12_food']]);
+  const nutrients = {}, provenance = {};
+  for (const item of fdcNutrients) if (mapped.has(item.nutrientId)) { const key = mapped.get(item.nutrientId); nutrients[key] = item.amount; provenance[key] = { source: 'USDA FoodData Central', evidenceId: `fdc:${record.fdcId}`, fdcNutrientId: item.nutrientId, nutrientName: item.nutrientName, unit: item.unit, amountPer100g: item.amount }; }
+  const basis = preparation(record.description);
+  return { id: `fdc-${record.fdcId}`, fdcId: record.fdcId, name: record.description, category: record.foodCategory?.description ?? record.foodCategory ?? 'USDA food', dataType: record.dataType, publicationDate: record.publicationDate ?? null, rawCookedBasis: basis, metadata: { scientificName: record.scientificName ?? null, foodCode: record.foodCode ?? null, ndbNumber: record.ndbNumber ?? null }, preparations: [{ method: basis, basis, yield: null, retention: {}, evidenceId: `fdc:${record.fdcId}` }], nutrients, fdcNutrients, provenance, source: { name: 'USDA FoodData Central', official: true, endpoint: `/food/${record.fdcId}`, fdcId: record.fdcId } };
+}
+async function atomicJson(path, value) { await mkdir(dirname(path), { recursive: true }); const temporary = `${path}.tmp-${process.pid}`; await writeFile(temporary, JSON.stringify(value, null, 2) + '\n'); await rename(temporary, path); }
+async function main() {
+  const apiKey = process.env.USDA_FDC_API_KEY;
+  if (!apiKey) throw new Error('USDA_FDC_API_KEY is required. Set it in the local/server environment; no fallback dataset will be used.');
+  const manifest = validateManifest(await readJson('data/fdc-food-manifest.json', 'FDC manifest')), targets = await readJson('data/reference-targets.json', 'reference targets');
+  const foods = [], entries = [], usedIds = new Set();
+  for (let index = 0; index < manifest.foods.length; index++) {
+    const requestedFood = manifest.foods[index], manifestIdentifier = `${String(index + 1).padStart(3, '0')}-${slug(requestedFood)}`;
+    const search = await cachedRequest('/foods/search', { query: requestedFood, dataType: DATA_TYPES.join(','), pageSize: '50', pageNumber: '1', sortBy: 'dataType.keyword', sortOrder: 'asc' }, apiKey);
+    if (!Array.isArray(search.foods)) throw new Error(`USDA FDC search response for manifest entry ${manifestIdentifier} has no foods array.`);
+    const resolution = selectCandidate(requestedFood, search.foods, usedIds);
+    const matchSearchInformation = { endpoint: '/foods/search', query: requestedFood, allowedDataTypes: DATA_TYPES, returnedCount: search.foods.length, totalHits: search.totalHits ?? null, topCandidates: resolution.ranked.slice(0, 5).map(x => ({ fdcId: x.food.fdcId, description: x.food.description, dataType: x.food.dataType, score: x.score, coverage: x.coverage })) };
+    if (!resolution.selected) { entries.push({ manifestIdentifier, requestedFood, selectedFdcId: null, selectedDescription: null, dataType: null, matchSearchInformation, resolutionStatus: 'unresolved', reasonForSelection: null, unresolvedReason: resolution.reason }); continue; }
+    const selected = resolution.selected.food, detail = await cachedRequest(`/food/${selected.fdcId}`, {}, apiKey);
+    try { const food = canonicalFood(detail); usedIds.add(food.fdcId); foods.push(food); entries.push({ manifestIdentifier, requestedFood, selectedFdcId: food.fdcId, selectedDescription: food.name, dataType: food.dataType, matchSearchInformation, resolutionStatus: 'resolved', reasonForSelection: resolution.reason, unresolvedReason: null, detailEndpoint: `/food/${food.fdcId}` }); }
+    catch (error) { entries.push({ manifestIdentifier, requestedFood, selectedFdcId: selected.fdcId, selectedDescription: selected.description, dataType: selected.dataType, matchSearchInformation, resolutionStatus: 'unresolved', reasonForSelection: resolution.reason, unresolvedReason: error.message }); }
+  }
+  const acquiredAt = new Date().toISOString(), resolved = entries.filter(x => x.resolutionStatus === 'resolved').length;
+  const report = { schemaVersion: 2, generatedAt: acquiredAt, acquisitionSource: { name: 'USDA FoodData Central API', official: true, origin: API_ORIGIN, searchEndpoint: '/foods/search', detailEndpoint: '/food/{fdcId}' }, total: entries.length, resolved, unresolved: entries.length - resolved, entries };
+  const canonical = { schemaVersion: 2, status: resolved === entries.length ? 'complete' : 'partial', source: { name: 'USDA FoodData Central', official: true, acquisition: 'FoodData Central API', acquiredAt }, nutrientForms: { iron_total: { nutrientKey: 'iron', origin: 'unknown', chemicalForm: 'total_iron', hemeFraction: null, label: 'Total iron; heme fraction unavailable' } }, foods, targets };
+  await atomicJson(outputPath, canonical); await atomicJson(reportPath, report);
+  if (resolved !== entries.length) throw new Error(`Resolved ${resolved}/${entries.length}; ${entries.length - resolved} entries remain unresolved. See ${reportPath}.`);
+  console.log(`Acquired ${resolved} official USDA FDC foods via the API and wrote ${outputPath}.`);
+}
+if (import.meta.url === new URL(`file://${process.argv[1]}`).href) main().catch(error => { console.error(`FDC acquisition failed: ${redact(error.message, process.env.USDA_FDC_API_KEY)}`); process.exitCode = 1; });
+export { canonicalFood, rankCandidate, selectCandidate, validateManifest };
