@@ -92,3 +92,21 @@ Fat-soluble vitamins other than vitamin D have no UC executable model in this re
 ## Crohn’s/UC combination behavior
 
 Crohn’s and UC have independent mechanism IDs, sources, disease-state requirements, and disabled model keys. Selecting either with hypochlorhydria or celiac preserves all applicable qualitative notices as provenance but leaves the healthy B12/iron absorption ranges unchanged. Nothing is multiplied: independence between mechanisms was not established, and every IBD candidate coefficient is disabled. The resolver deduplicates by mechanism ID; iron loss and absorption remain distinct stages so anemia/bleeding cannot silently become an absorption penalty.
+
+## Condition-specific evidence audit: pancreatic exocrine insufficiency (PEI)
+
+**No PEI numerical model is enabled.** The executable PEI state requires a documented diagnosis, not symptoms; it deliberately has no fecal-elastase severity slider because no reviewed human severity-response coefficient transfers to this meal model. In untreated-context PEI, `pei.exocrine-fat-digestion` records impaired **digestion** (not an arbitrary intestinal absorption or requirement penalty) for vitamins A, D, E, and K. The AGA update defines PEI as impaired enzyme activity causing maldigestion, but neither it nor the nutrition review supplies a food-form-specific dietary-fat or fat-soluble-vitamin fraction compatible with the app. B12, calcium, magnesium, and zinc are status-monitoring contexts only: deficiency prevalence/status can reflect intake, etiology, inflammation, and treatment and is not a coefficient.
+
+The UI distinguishes documented PEI without an enzyme-replacement context from documented PEI with one. `pei.pert-clinical-context` is still qualitative: AGA guidance supports clinician-managed pancreatic enzyme replacement therapy (PERT) for documented PEI but does **not** establish a nutrient/form-specific restoration percentage, so it does not restore digestion/absorption to 100%, change the healthy estimate, or prescribe a dose. Official references and personalized modeled requirements remain unavailable. Sources and disabled class-F candidates are recorded in `202609250010_pei_bariatric_evidence_audit.sql` (`aga-epi-update-2023`; `pei-nutrition-review-2019`).
+
+## Condition-specific evidence audit: bariatric surgery
+
+**No bariatric numerical model is enabled.** The catalog accepts only a documented procedure and keeps three independent anatomy-specific records; it has no generic “bariatric surgery × multiplier,” no inferred postoperative time curve, and no altered official RDA/AI/EAR/UL.
+
+| Procedure | Qualitative mechanisms and stage | Boundary |
+| --- | --- | --- |
+| RYGB | Iron gastric/duodenal handling and B12 gastric processing (**absorption**); calcium proximal-intestinal handling (**absorption**); vitamin D, folate, thiamine, A/E/K, zinc, copper, and magnesium status monitoring (**systemic**) | Bypassed anatomy, acid/intrinsic-factor changes, status studies, and clinical guidance do not give a transferable food-form meal coefficient. |
+| Sleeve gastrectomy | B12 and iron gastric processing (**absorption**); calcium, vitamin D, folate, thiamine, A/E/K, zinc, copper, and magnesium status monitoring (**systemic**) | Sleeve is not given RYGB intestinal-bypass effects. Reduced volume, intake changes, status, and guidance are not absorption coefficients. |
+| BPD/DS | Fat-soluble vitamin handling (**digestion**) and iron, calcium, B12, zinc, copper, magnesium handling (**absorption**) | Its food/biliopancreatic anatomy is recorded independently; no RYGB coefficient, dietary-fat fraction, or vitamin A/D/E/K fraction is transferred. |
+
+The ASMBS 2016 update and BOMSS 2020 guidance are stored as sources. Their procedure-specific screening and supplementation recommendations are available only as clinical-follow-up considerations; recommended supplement amounts and deficiency prevalence are **not** converted into physiology, a personalized target, or a dose recommendation. In RYGB or sleeve plus hypochlorhydria, the resolver suppresses the overlapping gastric-acid food-release/non-heme-solubilization notices and retains the surgery anatomy provenance, preventing a second unproven penalty. Celiac, Crohn’s, and UC retain their independently named qualitative provenance; nothing is multiplied.
