@@ -9,3 +9,5 @@ test('hypochlorhydria and celiac audit records explicitly disable unsupported co
  for(const key of ['b12.food_bound.pii_acid_suppression.v1','iron.nonheme.hypochlorhydria.v1','celiac.active.mucosal-malabsorption.v1','celiac.treated.recovery.v1'])assert.match(conditionSql,new RegExp(`'${key.replaceAll('.','\\.')}'`));
  assert.match(conditionSql,/,'F','(?:low|moderate)',false\)/);
 });
+
+test('Crohn and ulcerative-colitis audit records independently disable unsupported models',()=>{const conditionSql=readFileSync('supabase/migrations/202609250009_crohn_uc_evidence_audit.sql','utf8');for(const key of ['crohn.active.mucosal-absorption.v1','crohn.ileal.b12-absorption.v1','crohn.active.iron-loss.v1','crohn.vitamin-d-absorption.v1','uc.active.iron-loss.v1','uc.vitamin-d-absorption.v1','uc.micronutrient-status.v1'])assert.match(conditionSql,new RegExp(`'${key.replaceAll('.','\\.')}'`));assert.match(conditionSql,/crohn\.ileal\.b12-absorption-risk/);assert.match(conditionSql,/uc\.active\.iron-gastrointestinal-loss/);assert.match(conditionSql,/,'F','(?:low|moderate)',false\)/);});

@@ -77,3 +77,52 @@ test('combined hypochlorhydria and active celiac preserve both mechanisms withou
  assert.equal(new Set(b12.conditionEffects.map(x=>x.mechanismId)).size,b12.conditionEffects.length);
  assert.ok(b12.conditionEffects.every(x=>x.quantitative===false));
 });
+
+test('Crohn states are anatomical, qualitative, and preserve the healthy numeric model',()=>{
+ const entries=[
+  {nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},
+  {nutrientKey:'iron',formId:'iron_nonheme',origin:'plant',amount:10,unit:'mg'},
+  {nutrientKey:'vitamin_d',formId:'vitamin_d3',origin:'animal',amount:10,unit:'µg'},
+  {nutrientKey:'zinc',formId:'zinc',origin:'plant',amount:4,unit:'mg'},
+  {nutrientKey:'thiamine',formId:'thiamine',origin:'plant',amount:1,unit:'mg'}];
+ const targets={iron:{rda:8,unit:'mg'},vitamin_d:{rda:15,unit:'µg'}};
+ const baseline=runNutrientPipeline(entries,{},targets);
+ for(const state of ['active_ileal','active_nonileal','remission_ileal','remission_nonileal']){
+  const result=runNutrientPipeline(entries,{conditions:[{id:'crohn_disease',state}]},targets);
+  assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption),state);
+  assert.equal(result.find(x=>x.nutrientKey==='thiamine').conditionEffects.length,0);
+  assert.equal(result.find(x=>x.nutrientKey==='iron').targetComparison.target.rda,8);
+  assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));
+ }
+ const ileal=runNutrientPipeline(entries,{conditions:[{id:'crohn_disease',state:'active_ileal'}]});
+ const nonIleal=runNutrientPipeline(entries,{conditions:[{id:'crohn_disease',state:'active_nonileal'}]});
+ assert.ok(ileal.find(x=>x.nutrientKey==='vitamin_b12').conditionEffects.some(x=>x.mechanismId==='crohn.ileal.b12-absorption-risk'));
+ assert.equal(nonIleal.find(x=>x.nutrientKey==='vitamin_b12').conditionEffects.length,0);
+ assert.ok(ileal.find(x=>x.nutrientKey==='iron').conditionEffects.some(x=>x.stage==='loss'));
+});
+
+test('ulcerative colitis has independent active and remission mechanisms, not a Crohn coefficient',()=>{
+ const entries=[{nutrientKey:'iron',formId:'iron_heme',origin:'animal',amount:10,unit:'mg'},{nutrientKey:'vitamin_d',formId:'vitamin_d3',origin:'animal',amount:10,unit:'µg'},{nutrientKey:'folate',formId:'folate',origin:'plant',amount:100,unit:'µg'},{nutrientKey:'thiamine',formId:'thiamine',origin:'plant',amount:1,unit:'mg'}];
+ const baseline=runNutrientPipeline(entries,{}),active=runNutrientPipeline(entries,{conditions:[{id:'ulcerative_colitis',state:'active'}]}),remission=runNutrientPipeline(entries,{conditions:[{id:'ulcerative_colitis',state:'remission'}]});
+ assert.deepEqual(active.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.deepEqual(remission.map(x=>x.absorption),baseline.map(x=>x.absorption));
+ const iron=active.find(x=>x.nutrientKey==='iron');assert.deepEqual(iron.conditionEffects.map(x=>x.mechanismId),['uc.active.iron-gastrointestinal-loss']);assert.equal(iron.conditionEffects[0].stage,'loss');
+ assert.ok(active.find(x=>x.nutrientKey==='vitamin_d').conditionEffects.some(x=>x.mechanismId==='uc.active.nutrient-status'));
+ assert.equal(active.find(x=>x.nutrientKey==='thiamine').conditionEffects.length,0);
+ assert.ok(remission.find(x=>x.nutrientKey==='iron').conditionEffects.some(x=>x.mechanismId==='uc.remission.nutrition-monitoring'));
+ assert.ok(resolveConditionEffects([{id:'crohn_disease',state:'active_nonileal'}]).every(x=>!x.mechanismId.startsWith('uc.')));
+});
+
+test('Crohn/UC combinations retain distinct qualitative provenance without double counting',()=>{
+ const entries=[{nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},{nutrientKey:'iron',formId:'iron_nonheme',origin:'plant',amount:10,unit:'mg'}];
+ const baseline=runNutrientPipeline(entries,{});
+ for(const conditions of [
+  [{id:'crohn_disease',state:'active_ileal'},{id:'hypochlorhydria',state:'documented'}],
+  [{id:'crohn_disease',state:'active_ileal'},{id:'celiac_disease',state:'active_untreated'}],
+  [{id:'ulcerative_colitis',state:'active'},{id:'hypochlorhydria',state:'documented'}],
+  [{id:'ulcerative_colitis',state:'active'},{id:'celiac_disease',state:'active_untreated'}]
+ ]){
+  const result=runNutrientPipeline(entries,{conditions});assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));
+  for(const nutrient of result)assert.equal(new Set(nutrient.conditionEffects.map(x=>x.mechanismId)).size,nutrient.conditionEffects.length);
+  assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));
+ }
+});
