@@ -19,9 +19,9 @@ test('normal zinc does not create copper depletion; high supplemental zinc flags
  assert.equal(copper.grossIntake.value,1);assert.equal(copper.conditionEffects.length,0);assert.equal(copper.mealInteractions.observations.length,1);
 });
 test('condition effects are nutrient-specific, qualitative where unquantified, and deduplicated',()=>{
- const effects=resolveConditionEffects(['hypochlorhydria','gastrectomy']);
+ const effects=resolveConditionEffects(['hypochlorhydria',{id:'gastrectomy',state:'partial'}]);
  assert.ok(effects.some(x=>x.nutrients.includes('vitamin_b12')));assert.ok(effects.every(x=>x.quantitative===false));
- assert.equal(effects.filter(x=>x.mechanismId==='gastric-acid.food-release').length,1);
+ assert.equal(effects.filter(x=>x.mechanismId==='gastric-acid.food-release').length,0);assert.ok(effects.some(x=>x.mechanismId==='gastrectomy.partial.b12-gastric-processing'));
  const [b12]=runNutrientPipeline([{nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'}],{conditions:['hypochlorhydria']});
  assert.equal(b12.conditionEffects.length,1);assert.equal(b12.conditionEffects[0].type,'reduced_absorption');
 });
@@ -147,4 +147,21 @@ test('bariatric procedures are independent qualitative models and suppress overl
 test('new-condition combinations retain qualitative provenance without multiplication',()=>{
  const entries=[{nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},{nutrientKey:'vitamin_a',formId:'vitamin_a',origin:'animal',amount:100,unit:'µg'}],baseline=runNutrientPipeline(entries,{});
  for(const conditions of [[{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'},{id:'celiac_disease',state:'active_untreated'}],[{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'},{id:'crohn_disease',state:'active_ileal'}],[{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'},{id:'ulcerative_colitis',state:'active'}],[{id:'bariatric_bypass',state:'rygb'},{id:'celiac_disease',state:'active_untreated'}],[{id:'bariatric_bypass',state:'sleeve_gastrectomy'},{id:'celiac_disease',state:'active_untreated'}],[{id:'bariatric_bypass',state:'bpd_ds'},{id:'celiac_disease',state:'active_untreated'}]]){const result=runNutrientPipeline(entries,{conditions});assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));for(const nutrient of result)assert.equal(new Set(nutrient.conditionEffects.map(x=>x.mechanismId)).size,nutrient.conditionEffects.length)}
+});
+
+test('gastrectomy separates partial and total qualitative anatomy and suppresses acid overlap',()=>{
+ const entries=[{nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},{nutrientKey:'vitamin_b12',formId:'b12_free',origin:'supplement',foodBound:false,amount:2,unit:'µg'},{nutrientKey:'iron',formId:'iron_nonheme',origin:'plant',amount:8,unit:'mg'},{nutrientKey:'iron',formId:'iron_heme',origin:'animal',amount:4,unit:'mg'},{nutrientKey:'thiamine',formId:'thiamine',origin:'plant',amount:1,unit:'mg'}],targets={iron:{rda:8,unit:'mg'}};
+ const baseline=runNutrientPipeline(entries,{},targets);
+ for(const state of ['partial','total']){const result=runNutrientPipeline(entries,{conditions:[{id:'gastrectomy',state}]},targets);assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.equal(result.find(x=>x.nutrientKey==='iron').targetComparison.target.rda,8);assert.equal(result.find(x=>x.nutrientKey==='thiamine').conditionEffects.length,0);assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));}
+ const partial=resolveConditionEffects([{id:'gastrectomy',state:'partial'}]),total=resolveConditionEffects([{id:'gastrectomy',state:'total'}]);assert.ok(partial.some(x=>x.mechanismId==='gastrectomy.partial.b12-gastric-processing'));assert.ok(total.some(x=>x.mechanismId==='gastrectomy.total.b12-intrinsic-factor-loss'));assert.notDeepEqual(partial.map(x=>x.mechanismId),total.map(x=>x.mechanismId));
+ const overlap=runNutrientPipeline(entries,{conditions:[{id:'hypochlorhydria',state:'documented'},{id:'gastrectomy',state:'total'}]});for(const nutrient of overlap)assert.ok(!nutrient.conditionEffects.some(x=>x.mechanismId.startsWith('gastric-acid.')));
+ const surgicalConflict=resolveConditionEffects([{id:'gastrectomy',state:'total'},{id:'bariatric_bypass',state:'rygb'}]);assert.ok(surgicalConflict.every(x=>x.conditionId!=='bariatric_bypass'));
+});
+
+test('documented ileal resection is qualitative, gates anatomy, and replaces overlapping Crohn B12 notice',()=>{
+ const entries=[{nutrientKey:'vitamin_b12',formId:'b12_food',origin:'animal',foodBound:true,amount:2,unit:'µg'},{nutrientKey:'vitamin_a',formId:'vitamin_a',origin:'animal',amount:100,unit:'µg'},{nutrientKey:'vitamin_d',formId:'vitamin_d3',origin:'animal',amount:10,unit:'µg'},{nutrientKey:'vitamin_e',formId:'vitamin_e',origin:'plant',amount:2,unit:'mg'},{nutrientKey:'vitamin_k',formId:'vitamin_k',origin:'plant',amount:80,unit:'µg'},{nutrientKey:'thiamine',formId:'thiamine',origin:'plant',amount:1,unit:'mg'}],targets={vitamin_d:{rda:15,unit:'µg'}};
+ const baseline=runNutrientPipeline(entries,{},targets),resection=runNutrientPipeline(entries,{conditions:[{id:'ileal_resection',state:'documented_resection'}]},targets);assert.deepEqual(resection.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.equal(resection.find(x=>x.nutrientKey==='thiamine').conditionEffects.length,0);assert.equal(resection.find(x=>x.nutrientKey==='vitamin_d').targetComparison.target.rda,15);assert.ok(resection.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));
+ for(const nutrient of ['vitamin_a','vitamin_d','vitamin_e','vitamin_k'])assert.ok(resection.find(x=>x.nutrientKey===nutrient).conditionEffects.some(x=>x.mechanismId==='ileal-resection.bile-acid-fat-handling'));
+ assert.equal(resolveConditionEffects([{id:'ileal_resection',state:'unknown'}]).length,0);
+ const combined=runNutrientPipeline(entries,{conditions:[{id:'crohn_disease',state:'active_ileal'},{id:'ileal_resection',state:'documented_resection'},{id:'celiac_disease',state:'active_untreated'},{id:'hypochlorhydria',state:'documented'}]});const b12=combined.find(x=>x.nutrientKey==='vitamin_b12');assert.ok(b12.conditionEffects.some(x=>x.mechanismId==='ileal-resection.b12-terminal-ileum-handling'));assert.ok(!b12.conditionEffects.some(x=>x.mechanismId==='crohn.ileal.b12-absorption-risk'));assert.ok(b12.conditionEffects.some(x=>x.mechanismId==='celiac.active.mucosal-malabsorption'));assert.ok(b12.conditionEffects.some(x=>x.mechanismId==='gastric-acid.food-release'));
 });
