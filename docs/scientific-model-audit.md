@@ -62,3 +62,33 @@ Thus none of these evidence records is treated as an absorption, loss, requireme
 ## Combined low-acid and celiac selections
 
 Condition effects are selected by mechanism ID and state, then exposed together as provenance. They do **not** modify the healthy B12/iron ranges and therefore cannot be multiplied. In particular, low-acid food release and active-celiac mucosal absorption are distinct upstream mechanisms, but evidence does not establish independence or a joint coefficient; the combined result remains the healthy numeric range with two qualitative mechanism notices. This prevents both generic pathology multipliers and unsupported double counting.
+
+## Condition-specific evidence audit: Crohn’s disease
+
+**No Crohn’s numerical model is enabled.** The audit found human clinical and observational evidence for nutrient risk, but no nutrient-form-specific, transferable oral absorption fraction, daily blood-loss amount, requirement increment, or vitamin-D conversion equation that can be safely applied to an individual meal. Each candidate is stored as a disabled class-F assumption in `202609250009_crohn_uc_evidence_audit.sql`; it cannot affect the calculation pipeline.
+
+| Context and nutrient | Measured/claimed physiological issue | Executable result | Source and limitation |
+| --- | --- | --- | --- |
+| Active Crohn’s; iron, vitamin D, folate, calcium, magnesium, zinc, vitamins A/E/K | Intake, status, inflammation, disease location, treatment and sometimes malabsorption risk; not a consistent oral-dose absorption endpoint. | Qualitative `crohn.active.mucosal-nutrient-handling` at **absorption** only; no coefficient. | Crohn nutrition review (2020), `crohn.active.mucosal-absorption.v1` disabled (F, low). Deficiency prevalence and serum values are not absorbed fractions. |
+| Crohn’s with documented terminal-ileal involvement; B12 | Ileal involvement is associated with B12 deficiency/status risk. | Qualitative `crohn.ileal.b12-absorption-risk` at **absorption**. It applies only to `active_ileal` or `remission_ileal`; it does not apply to non-ileal states. | IBD B12 observational study (2014), `crohn.ileal.b12-absorption.v1` disabled (F, moderate). It does not measure food-dose B12 absorption and does **not** model ileal resection. |
+| Active Crohn’s; iron | Gastrointestinal blood loss and inflammatory iron restriction are clinically distinct from absorption. | Qualitative `crohn.active.iron-loss-and-regulation` at **loss**. It does not change heme or non-heme absorption, dietary requirement, or gross intake. | ECCO iron/anemia consensus (2015), `crohn.active.iron-loss.v1` disabled (F, moderate): no reliable personal blood-loss volume. |
+| Crohn’s; vitamin D | 25-OH-D/status, intake, inflammation, and sometimes fat-malabsorption context—not an established oral absorption or conversion fraction. | No vitamin-D absorption, metabolism, or target coefficient; qualitative active-state context only. | Crohn nutrition review (2020), `crohn.vitamin-d-absorption.v1` disabled (F, low). |
+| Remission | Residual status reflects prior activity, intake, healing, treatment, and anatomy. | Qualitative `crohn.remission.nutrition-monitoring` at **systemic** stage; no persistent penalty and no assumed recovery percentage. | AGA IBD nutrition update (2024). |
+
+The UI asks for one clinician-documented combined activity/anatomy state: active or remission, with or without reported ileal involvement. It neither infers anatomy from symptoms nor asks about/reuses ileal resection in this run. A clinician-discussion recommendation is limited to evaluation of B12 status with ileal involvement and active-disease iron/anemia assessment; it is not a supplement or treatment recommendation.
+
+## Condition-specific evidence audit: ulcerative colitis
+
+**No ulcerative-colitis numerical model is enabled.** UC evidence was audited independently; no Crohn coefficient is reused. The active/remission input controls only UC’s own provenance records.
+
+| Context and nutrient | Measured/claimed physiological issue | Executable result | Source and limitation |
+| --- | --- | --- | --- |
+| Active UC; iron | Colonic bleeding and inflammatory iron restriction; anemia prevalence is not absorption impairment. | Qualitative `uc.active.iron-gastrointestinal-loss` at **loss**. No daily blood-loss amount, increased requirement, or heme/non-heme absorption multiplier. | ECCO iron/anemia consensus (2015), `uc.active.iron-loss.v1` disabled (F, moderate). |
+| Active UC; vitamin D, folate, calcium, magnesium, zinc | Serum/status, intake, inflammation, and treatment findings. | Qualitative `uc.active.nutrient-status` at **systemic** stage. No absorption, conversion, or target coefficient. | UC nutrition review (2021), `uc.vitamin-d-absorption.v1` and `uc.micronutrient-status.v1` disabled (F, low). |
+| UC remission | Monitoring context; no evidence supports either a continuing generic penalty or a normalization percentage. | Qualitative `uc.remission.nutrition-monitoring` at **systemic** stage. | AGA IBD nutrition update (2024). |
+
+Fat-soluble vitamins other than vitamin D have no UC executable model in this release: the reviewed evidence did not provide a transferable stage-matched coefficient. Official RDA/AI/EAR/UL values remain unchanged for both conditions, and because no quantitative condition model exists there is no “personalized modeled requirement” or estimated gap.
+
+## Crohn’s/UC combination behavior
+
+Crohn’s and UC have independent mechanism IDs, sources, disease-state requirements, and disabled model keys. Selecting either with hypochlorhydria or celiac preserves all applicable qualitative notices as provenance but leaves the healthy B12/iron absorption ranges unchanged. Nothing is multiplied: independence between mechanisms was not established, and every IBD candidate coefficient is disabled. The resolver deduplicates by mechanism ID; iron loss and absorption remain distinct stages so anemia/bleeding cannot silently become an absorption penalty.
