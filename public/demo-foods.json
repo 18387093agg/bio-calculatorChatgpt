@@ -237,7 +237,14 @@
       "explanation": "Heme and non-heme contributions remain distinct. The displayed absorption range is a meal-level estimate, not a personal measurement.",
       "referenceSystem": "US National Academies DRI",
       "population": "Adults; demo values use the male 19–50 reference where sex-specific",
-      "evidenceId": "nasem-dri"
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "male",
+      "ageMin": 19,
+      "ageMax": 50,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "vitamin_b12": {
       "rda": 2.4,
@@ -247,7 +254,14 @@
       "explanation": "Food-bound B12 is represented separately from supplemental/free forms. Individual gastric and intrinsic-factor status are not inferred.",
       "referenceSystem": "US National Academies DRI",
       "population": "Adults; demo values use the male 19–50 reference where sex-specific",
-      "evidenceId": "nasem-dri"
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "all",
+      "ageMin": 19,
+      "ageMax": null,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "calcium": {
       "rda": 1000,
@@ -258,7 +272,14 @@
       "explanation": "Quantitative absorption is not modeled.",
       "referenceSystem": "US National Academies DRI",
       "population": "Adults; demo values use the male 19–50 reference where sex-specific",
-      "evidenceId": "nasem-dri"
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "all",
+      "ageMin": 19,
+      "ageMax": 50,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "thiamine": {
       "rda": 1.2,
@@ -269,7 +290,14 @@
       "referenceSystem": "US National Academies DRI",
       "population": "Adults; demo values use the male 19–50 reference where sex-specific",
       "evidenceId": "nasem-dri",
-      "projectModelKey": "thiamine.energy.optimization.v1"
+      "projectModelKey": "thiamine.energy.optimization.v1",
+      "jurisdiction": "United States and Canada",
+      "sex": "male",
+      "ageMin": 19,
+      "ageMax": null,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "vitamin_c": {
       "rda": 90,
@@ -280,7 +308,14 @@
       "explanation": "Preparation retention is represented when a documented local demo rule exists.",
       "referenceSystem": "US National Academies DRI",
       "population": "Adults; demo values use the male 19–50 reference where sex-specific",
-      "evidenceId": "nasem-dri"
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "male",
+      "ageMin": 19,
+      "ageMax": null,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     },
     "zinc": {
       "rda": 11,
@@ -291,7 +326,14 @@
       "explanation": "Quantitative absorption is not modeled.",
       "referenceSystem": "US National Academies DRI",
       "population": "Adults; demo values use the male 19–50 reference where sex-specific",
-      "evidenceId": "nasem-dri"
+      "evidenceId": "nasem-dri",
+      "jurisdiction": "United States and Canada",
+      "sex": "male",
+      "ageMin": 19,
+      "ageMax": null,
+      "lifeStage": "adult",
+      "source": "National Academies Dietary Reference Intakes",
+      "sourceUrl": "https://nap.nationalacademies.org/collection/57/dietary-reference-intakes"
     }
   }
 }

@@ -1,6 +1,6 @@
 # Bio Calculator MVP
 
-A working, dependency-free meal calculator MVP. It serves a public, local demo data set and does **not** require Supabase to render or calculate a meal.
+A dependency-free nutrition calculator with a canonical calculation engine. It loads `public/canonical-foods.json` when generated from an official USDA FDC export and otherwise shows an explicit ten-food fallback warning. Supabase is not required for the local workspace.
 
 ## Quick start
 

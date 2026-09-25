@@ -1,0 +1,3 @@
+import test from'node:test';import assert from'node:assert/strict';import{readFileSync}from'node:fs';
+test('browser meal service is a formula-free adapter over the generated canonical engine',()=>{const service=readFileSync('public/application/meal-service.js','utf8');assert.match(service,/from'\.\.\/calculation-engine\.js'/);for(const coefficient of ['.15','.35','.03','.12','.65','.70','.00060','.00068'])assert.ok(!service.includes(coefficient),coefficient)});
+test('published engine is exactly generated from canonical TypeScript source',()=>assert.equal(readFileSync('public/calculation-engine.js','utf8'),readFileSync('src/calculation/engine.ts','utf8').split('\n').slice(1).join('\n')));

@@ -1,0 +1,450 @@
+{
+  "generatedAt": "2026-09-25T00:00:00Z",
+  "input": null,
+  "total": 87,
+  "resolved": 0,
+  "unresolved": 87,
+  "externalDependency": {
+    "url": "https://fdc.nal.usda.gov/download-datasets/",
+    "required": "Official USDA FoodData Central Foundation/SR bulk JSON export or API response",
+    "observedFailure": "CONNECT tunnel failed, response 403 for fdc.nal.usda.gov and api.nal.usda.gov from this environment",
+    "reproducibleCommand": "npm run import:fdc -- /path/to/FoodData_Central_foundation_food_json.json"
+  },
+  "entries": [
+    {
+      "descriptor": "beef ground cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "beef liver cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "chicken breast roasted",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "chicken thigh roasted",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "turkey breast roasted",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "pork loin cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "lamb cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "salmon cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "tuna canned water",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "sardines canned",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "cod cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "shrimp cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "oyster cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "egg whole cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "milk 2 percent",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "yogurt plain",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "cheddar cheese",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "cottage cheese",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "tofu firm",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "tempeh cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "lentils cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "chickpeas cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "black beans cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "kidney beans cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "navy beans cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "peas cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "edamame cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "almonds",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "walnuts",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "cashews",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "pistachios",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "peanuts",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "sunflower seeds",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "pumpkin seeds",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "chia seeds",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "flaxseed",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "sesame seeds",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "oats cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "rice white cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "rice brown cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "quinoa cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "barley pearled cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "whole wheat bread",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "white bread",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "pasta cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "potato boiled",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "sweet potato baked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "spinach cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "kale cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "broccoli cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "cauliflower cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "cabbage cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "carrot cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "tomato raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "bell pepper red raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "zucchini cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "asparagus cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "mushroom cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "onion raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "garlic raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "beet cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "green beans cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "brussels sprouts cooked",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "avocado raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "olive ripe",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "apple raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "banana raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "orange raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "grapefruit raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "strawberry raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "blueberry raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "raspberry raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "grapes raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "watermelon raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "cantaloupe raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "kiwifruit raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "mango raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "pineapple raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "pear raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "peach raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "plum raw",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "dates",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "raisins",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "olive oil",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "butter",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "dark chocolate",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    },
+    {
+      "descriptor": "coffee brewed",
+      "status": "unresolved",
+      "reason": "Official FDC record unavailable in this execution environment; no value fabricated."
+    }
+  ]
+}
