@@ -17,7 +17,6 @@ Open [http://localhost:3000](http://localhost:3000). Select a food, enter grams,
 
 ```bash
 npm run lint
-npx tsc --noEmit
 npm test
 npm run build
 npm start
