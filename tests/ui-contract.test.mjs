@@ -10,5 +10,8 @@ test('personalization UI exposes documented PEI, PERT boundary, and procedure-sp
 
 test('personalization UI exposes partial/total gastrectomy and documented ileal-resection states',()=>{
  const app=readFileSync('public/app.js','utf8');
- for(const text of ['gastrectomy-state','Partial gastrectomy','Total gastrectomy','ileal-resection-state','Documented ileal resection','mutually exclusive unless a documented revision/conversion model','future short-bowel syndrome modeling'])assert.ok(app.includes(text),text);
+ for(const text of ['gastrectomy-state','Partial gastrectomy','Total gastrectomy','ileal-resection-state','Documented ileal resection','mutually exclusive unless a documented revision/conversion model'])assert.ok(app.includes(text),text);
 });
+test('personalization UI exposes documented anatomy-specific SBS contexts',()=>{for(const text of ['sbs-state','Documented SBS — jejunostomy, no colon continuity','Documented SBS — colon continuity, no terminal ileum','Documented SBS — colon and terminal ileum in continuity','Documented intestinal failure / nutrition support','remaining length and adaptation are not converted into numeric coefficients'])assert.ok(app.includes(text),text);});
+test('personalization UI exposes documented CKD and dialysis contexts',()=>{for(const text of ['ckd-state','Documented CKD stages 1–2 — not receiving dialysis','Documented CKD stages 3–5 — not receiving dialysis','Documented CKD — hemodialysis','Documented CKD — peritoneal dialysis'])assert.ok(app.includes(text),text);});
+test('personalization UI distinguishes cholestatic liver disease',()=>{for(const text of ['liver-state','Documented stable non-cholestatic liver disease','Documented decompensated non-cholestatic liver disease','Documented cholestatic liver disease'])assert.ok(app.includes(text),text);});

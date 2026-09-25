@@ -165,3 +165,70 @@ test('documented ileal resection is qualitative, gates anatomy, and replaces ove
  assert.equal(resolveConditionEffects([{id:'ileal_resection',state:'unknown'}]).length,0);
  const combined=runNutrientPipeline(entries,{conditions:[{id:'crohn_disease',state:'active_ileal'},{id:'ileal_resection',state:'documented_resection'},{id:'celiac_disease',state:'active_untreated'},{id:'hypochlorhydria',state:'documented'}]});const b12=combined.find(x=>x.nutrientKey==='vitamin_b12');assert.ok(b12.conditionEffects.some(x=>x.mechanismId==='ileal-resection.b12-terminal-ileum-handling'));assert.ok(!b12.conditionEffects.some(x=>x.mechanismId==='crohn.ileal.b12-absorption-risk'));assert.ok(b12.conditionEffects.some(x=>x.mechanismId==='celiac.active.mucosal-malabsorption'));assert.ok(b12.conditionEffects.some(x=>x.mechanismId==='gastric-acid.food-release'));
 });
+
+test('SBS is anatomy-gated, qualitative, and suppresses overlapping ileal pathways',()=>{
+ const entries=['vitamin_b12','iron','calcium','magnesium','vitamin_d','vitamin_a','vitamin_e','vitamin_k','zinc','folate'].map((nutrientKey,i)=>({nutrientKey,formId:nutrientKey,origin:'food',foodBound:nutrientKey==='vitamin_b12',amount:i+1,unit:'mg'}));
+ const targets={vitamin_d:{rda:15,unit:'µg'},iron:{rda:8,unit:'mg'}};
+ const baseline=runNutrientPipeline(entries,{},targets);
+ for(const state of ['jejunostomy_no_colon','jejunocolonic_no_terminal_ileum','jejunoileocolonic_terminal_ileum','intestinal_failure_nutrition_support']){
+  const result=runNutrientPipeline(entries,{conditions:[{id:'short_bowel_syndrome',state}]},targets);
+  assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));
+  assert.equal(result.find(x=>x.nutrientKey==='vitamin_d').targetComparison.target.rda,15);
+  assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));
+ }
+ const noIleum=resolveConditionEffects([{id:'short_bowel_syndrome',state:'jejunocolonic_no_terminal_ileum'}]);
+ assert.ok(noIleum.some(x=>x.mechanismId==='sbs.no-terminal-ileum.b12-uptake'));
+ assert.ok(noIleum.some(x=>x.stage==='digestion'));
+ const withIleum=resolveConditionEffects([{id:'short_bowel_syndrome',state:'jejunoileocolonic_terminal_ileum'}]);
+ assert.ok(!withIleum.some(x=>x.mechanismId==='sbs.no-terminal-ileum.b12-uptake'));
+ const combined=resolveConditionEffects([{id:'crohn_disease',state:'active_ileal'},{id:'ileal_resection',state:'documented_resection'},{id:'short_bowel_syndrome',state:'jejunocolonic_no_terminal_ileum'},{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'},{id:'celiac_disease',state:'active_untreated'},{id:'bariatric_bypass',state:'bpd_ds'}]);
+ assert.ok(combined.some(x=>x.mechanismId==='sbs.no-terminal-ileum.b12-uptake'));
+ assert.ok(!combined.some(x=>x.mechanismId==='ileal-resection.b12-terminal-ileum-handling'));
+ assert.ok(!combined.some(x=>x.mechanismId==='crohn.ileal.b12-absorption-risk'));
+ assert.ok(!combined.some(x=>x.mechanismId==='ileal-resection.bile-acid-fat-handling'));
+ assert.ok(combined.some(x=>x.mechanismId==='pei.exocrine-fat-digestion'));
+ assert.ok(combined.some(x=>x.mechanismId==='celiac.active.mucosal-malabsorption'));
+ assert.ok(combined.some(x=>x.mechanismId==='bpd_ds.fat-digestion-and-absorption'));
+});
+
+test('CKD stages renal handling and conversion without changing absorption or official references',()=>{
+ const entries=['vitamin_d','calcium','phosphorus','magnesium','potassium','iron','folate','vitamin_b12','zinc'].map((nutrientKey,i)=>({nutrientKey,formId:nutrientKey==='iron'?'iron_nonheme':nutrientKey,origin:'plant',amount:i+1,unit:'mg'}));
+ const targets={vitamin_d:{rda:15,unit:'µg'},iron:{rda:8,unit:'mg'},magnesium:{rda:420,unit:'mg'},calcium:{rda:1000,unit:'mg'}};
+ const baseline=runNutrientPipeline(entries,{},targets);
+ for(const state of ['stage_1_2_nondialysis','stage_3_5_nondialysis','hemodialysis','peritoneal_dialysis']){
+  const result=runNutrientPipeline(entries,{conditions:[{id:'chronic_kidney_disease',state}]},targets);
+  assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));
+  for(const nutrient of ['vitamin_d','iron','magnesium','calcium'])assert.deepEqual(result.find(x=>x.nutrientKey===nutrient).targetComparison.target,targets[nutrient]);
+  assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));
+ }
+ const advanced=resolveConditionEffects([{id:'chronic_kidney_disease',state:'stage_3_5_nondialysis'}]);
+ assert.equal(advanced.find(x=>x.mechanismId==='ckd.renal-vitamin-d-activation').stage,'conversion');
+ assert.equal(advanced.find(x=>x.mechanismId==='ckd.mbd.renal-mineral-handling').stage,'loss');
+ assert.equal(advanced.find(x=>x.mechanismId==='ckd.anemia.iron-systemic-context').stage,'systemic');
+ assert.ok(!advanced.some(x=>x.stage==='absorption'));
+ const dialysis=resolveConditionEffects([{id:'chronic_kidney_disease',state:'hemodialysis'},{id:'celiac_disease',state:'active_untreated'}]);
+ assert.ok(dialysis.some(x=>x.mechanismId==='ckd.dialysis.water-soluble-loss-context'));
+ assert.ok(dialysis.some(x=>x.mechanismId==='celiac.active.mucosal-malabsorption'));
+});
+
+test('liver disease separates cholestatic digestion from hepatic conversion and systemic status',()=>{
+ const nutrients=['vitamin_a','vitamin_d','vitamin_e','vitamin_k','folate','vitamin_b12','iron','zinc','copper','magnesium'];
+ const entries=nutrients.map((nutrientKey,i)=>({nutrientKey,formId:nutrientKey==='iron'?'iron_heme':nutrientKey,origin:'animal',amount:i+1,unit:'mg'}));
+ const targets={vitamin_a:{rda:900,unit:'µg'},vitamin_d:{rda:15,unit:'µg'},iron:{rda:8,unit:'mg'}};
+ const baseline=runNutrientPipeline(entries,{},targets);
+ for(const state of ['stable_noncholestatic','decompensated_noncholestatic','cholestatic']){
+  const result=runNutrientPipeline(entries,{conditions:[{id:'chronic_liver_disease',state}]},targets);
+  assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));
+  for(const key of Object.keys(targets))assert.deepEqual(result.find(x=>x.nutrientKey===key).targetComparison.target,targets[key]);
+  assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));
+ }
+ const stable=resolveConditionEffects([{id:'chronic_liver_disease',state:'stable_noncholestatic'}]);
+ const cholestatic=resolveConditionEffects([{id:'chronic_liver_disease',state:'cholestatic'}]);
+ assert.ok(!stable.some(x=>x.mechanismId==='liver.cholestasis.bile-fat-soluble-handling'));
+ assert.equal(cholestatic.find(x=>x.mechanismId==='liver.cholestasis.bile-fat-soluble-handling').stage,'digestion');
+ assert.equal(cholestatic.find(x=>x.mechanismId==='liver.hepatic-conversion-storage-transport').stage,'conversion');
+ assert.equal(cholestatic.find(x=>x.mechanismId==='liver.iron-regulation-storage-context').stage,'systemic');
+ for(const conditions of [[{id:'chronic_liver_disease',state:'cholestatic'},{id:'pancreatic_exocrine_insufficiency',state:'documented_without_pert'}],[{id:'chronic_liver_disease',state:'cholestatic'},{id:'short_bowel_syndrome',state:'jejunostomy_no_colon'}],[{id:'chronic_liver_disease',state:'stable_noncholestatic'},{id:'chronic_kidney_disease',state:'stage_3_5_nondialysis'}],[{id:'chronic_liver_disease',state:'cholestatic'},{id:'celiac_disease',state:'active_untreated'}],[{id:'chronic_liver_disease',state:'cholestatic'},{id:'bariatric_bypass',state:'bpd_ds'}]]){
+  const result=runNutrientPipeline(entries,{conditions});assert.deepEqual(result.map(x=>x.absorption),baseline.map(x=>x.absorption));assert.ok(result.flatMap(x=>x.conditionEffects).every(x=>x.quantitative===false));
+ }
+});
